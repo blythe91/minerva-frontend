@@ -6,5 +6,9 @@ export const showAlert = (title, text, icon) => {
     text: text,
     icon: icon,  // Puede ser 'success', 'error', 'warning', 'info', 'question'
     confirmButtonText: 'OK',
+
+    //position: "top-end",
+    //showConfirmButton: false,
+    timer: 5000
   });
 };
