@@ -1,14 +1,62 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux'; // Importar useDispatch
+import { login } from '../store/authSlice'; // Importar el action login
+import { Api } from '../services/Api';
+import { showAlert } from '../components/Alert';  // Importar el componente de alertas
 
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const dispatch = useDispatch(); // Inicializar el dispatch
 
-  const handleSubmit = (e) => {
+  // Valores iniciales del formulario
+  const initialValues = {
+    email: '',
+    password: ''
+  };
+
+  // Estado para los valores del formulario
+  const [values, setValues] = useState(initialValues);
+
+  // Manejar cambios en los inputs
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value, // Actualiza el campo correspondiente (email o password)
+    });
+  };
+
+  // onSubmit para manejar el envío del formulario
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log({ email, password });
-    // Aquí se agregarían las validaciones o el envío de la información.
+    console.log("Ingresa al onSubmit");
+    console.log(values);
+
+    // Enviar la petición a la API
+    const response = await Api.post('/auth/login', values);
+    console.log("respuesta de api");
+    console.log(response);
+    // Si la autenticación es exitosa
+    if (response.statusCode === 200) {
+      // Mostrar alerta de éxito
+      showAlert('¡Éxito!', 'Inicio de sesión exitoso', 'success');
+
+      // Dispatch para cambiar el estado de autenticación
+      dispatch(login());
+      return
+    }
+    if (response.statusCode === 401) {
+      // Indicar mensaje de login fallido
+      //showAlert('Error','Credenciales incorrectas', 'error');
+      showAlert('Error',response.data.error+" ("+response.statusCode+")" || 'Hubo un problema con el inicio de sesión', 'error');
+      return
+    } else {
+        // Mostrar alerta de error en caso de fallo
+      showAlert('Error',response.data.message+" ("+response.statusCode+")" || 'Hubo un problema con el inicio de sesión', 'error');
+    }
+      
+
+     
   };
 
   return (
@@ -25,14 +73,15 @@ const Login = () => {
 
         <h2 className="text-2xl font-semibold text-center mb-6">Iniciar Sesión</h2>
         
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700">Correo electrónico</label>
             <input
               type="email"
+              name="email" // Asigna el name para acceder al valor
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={values.email}
+              onChange={handleChange} // Cambia al controlador handleChange
               required
             />
           </div>
@@ -41,9 +90,10 @@ const Login = () => {
             <label className="block text-gray-700">Contraseña</label>
             <input
               type="password"
+              name="password" // Asigna el name para acceder al valor
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={values.password}
+              onChange={handleChange} // Cambia al controlador handleChange
               required
             />
           </div>
@@ -80,4 +130,5 @@ const Login = () => {
 };
 
 export default Login;
+
 

@@ -1,15 +1,9 @@
 import React, { useEffect } from 'react';
-import {
-  Routes,
-  Route,
-  useLocation,
-  Navigate,
-} from 'react-router-dom';
-
 import './css/style.css';
-
+import {Routes,Route,useLocation,Navigate,} from 'react-router-dom';
+import { Provider } from 'react-redux'; // Importar Provider
+import store from './store/store'; // Importar el store
 import './charts/ChartjsConfig';
-
 // Import pages
 import Dashboard from './pages/Dashboard';
 import Login from './components/Login';
@@ -30,17 +24,36 @@ function App() {
 
   return (
     <>
-    
-      <Routes>
-        <Route path="/" element={
-          <ProtectedRoute> 
-            <Dashboard /> 
-          </ProtectedRoute>} 
-        />
-        <Route path="/login" element={<Login/>}></Route>
-        <Route path="/register" element={<Register/>}></Route>
-        <Route path="/forgot-password" element={<ForgotPassword/>}></Route>
-      </Routes>
+      
+      <Provider store={store}> {/* Envolver con el Provider */}
+        <Routes>
+          {/* Rutas de autenticación */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
+
+
+          <Route path="/" element={<Dashboard />} /> 
+
+
+          {/* <Route path="/" element={
+            <ProtectedRoute> 
+              <Dashboard /> 
+            </ProtectedRoute>} 
+          /> */}
+
+          {/* Rutas protegidas */}
+          <Route element={<ProtectedRoute />}>
+            {/* <Route path="/" element={<Dashboard />} />  */}
+            {/* Ruta principal que puede redirigir al Dashboard */}
+            {/* Agrega aquí más rutas que necesiten ser protegidas */}
+            {/* Por ejemplo: */}
+            {/* <Route path="/dashboard/another-component" element={<AnotherComponent />} /> */}
+          </Route>
+          
+        </Routes>
+      </Provider>
     </>
   );
 }
