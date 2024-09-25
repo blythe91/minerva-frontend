@@ -1,8 +1,8 @@
-import Login from "../components/Login";
+import Login from "../components/auth/Login";
 import Dashboard from "../pages/Dashboard";
 import Welcome from "../pages/Welcome";
-import Register from "../components/Register"; // Importa el componente de registro
-import ForgotPassword from "../components/ForgotPassword"; // Importa el componente para recuperar contraseña
+import Register from "../components/auth/Register"; // Importa el componente de registro
+import ForgotPassword from "../components/auth/ForgotPassword"; // Importa el componente para recuperar contraseña
 
 export const routes = [
   {

@@ -6,11 +6,13 @@ import store from './store/store'; // Importar el store
 import './charts/ChartjsConfig';
 // Import pages
 import Dashboard from './pages/Dashboard';
-import Login from './components/Login';
-import ProtectedRoute from './components/ProtectedRoute';
+import Login from './components/auth/Login';
+import ProtectedRoute from './components/utils/ProtectedRoute';
 import { routes } from './routes/route'; // Si estás usando el archivo route.ts
-import Register from './components/Register';
-import ForgotPassword from './components/ForgotPassword';
+import Register from './components/auth/Register';
+import ForgotPassword from './components/auth/ForgotPassword';
+import ParticipantTable from './partials/participant/ParticipantTable';
+import ParticipantDetail from './partials/participant/ParticipantDetail';
 
 function App() {
 
@@ -32,9 +34,12 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-
-
-          <Route path="/" element={<Dashboard />} /> 
+          
+          <Route path="/" element={<Dashboard />}> 
+            {/* componentes hijos de Dashboard */}
+            <Route path="/participants" element={<ParticipantTable />} />
+            <Route path="/participants/:id" element={<ParticipantDetail />} />
+          </Route>
 
 
           {/* <Route path="/" element={

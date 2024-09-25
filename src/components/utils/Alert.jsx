@@ -12,3 +12,15 @@ export const showAlert = (title, text, icon) => {
     timer: 5000
   });
 };
+
+export const showAlertTopEnd = (title, text, icon) => {
+  Swal.fire({
+    title: title,
+    text: text,
+    icon: icon,  // Puede ser 'success', 'error', 'warning', 'info', 'question'   
+
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 5000
+  });
+};

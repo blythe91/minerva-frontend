@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux'; // Importar useDispatch
-import { login } from '../store/authSlice'; // Importar el action login
-import { Api } from '../services/Api';
-import { showAlert } from '../components/Alert';  // Importar el componente de alertas
+import { login } from '../../store/authSlice'; // Importar el action login
+import { Api } from '../../services/Api'; //conexión a la API
+import { showAlert } from '../utils/Alert';  // Importar el componente de alertas
 
 
 const Login = () => {

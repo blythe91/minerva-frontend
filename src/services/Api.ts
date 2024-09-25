@@ -18,4 +18,21 @@ export class Api {
             data: dataResponse,
         };
     }
+
+    // Nueva función para obtener los participantes
+    static async get<T>(url: string): Promise<any> {
+        const response = await fetch(`${Api.baseUrl}${url}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        });
+
+        const dataResponse = await response.json();
+
+        return {
+        statusCode: response.status,
+        data: dataResponse,
+        };
+    }
 }
