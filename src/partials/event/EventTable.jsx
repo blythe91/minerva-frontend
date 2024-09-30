@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
-import { showAlert } from '../../components/utils/Alert'; //alertas
-import { Api } from '../../services/Api'; //conexión a la API
+import { showAlert } from '../../components/utils/Alert'; // alertas
+import { Api } from '../../services/Api'; // conexión a la API
 import { useNavigate } from 'react-router-dom'; // Importa el hook useNavigate para la navegación
 
-const ParticipantTable = () => {
-  const [participants, setParticipants] = useState([]);
+const EventTable = () => {
+  const [events, setEvents] = useState([]);
   const [filterText, setFilterText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate(); // Inicializa useNavigate
 
-  // Fetch Participants
+  // Fetch Events
   useEffect(() => {
-    const fetchParticipants = async () => {
+    const fetchEvents = async () => {
       setIsLoading(true);
       try {
-        const response = await Api.get('/participants'); // Ajusta el endpoint según sea necesario
+        const response = await Api.get('/events'); // Ajusta el endpoint según sea necesario
 
         if (response.statusCode === 200) {
-          setParticipants(response.data);
+          setEvents(response.data);
         } else {
-          showAlert('Error', 'No se pudieron cargar los participantes', 'error');
+          showAlert('Error', 'No se pudieron cargar los eventos', 'error');
         }
       } catch (error) {
         showAlert('Error', 'Hubo un problema con la conexión', 'error');
@@ -28,20 +28,17 @@ const ParticipantTable = () => {
       setIsLoading(false);
     };
 
-    fetchParticipants();
+    fetchEvents();
   }, []);
 
   // Función para filtrar los elementos
-  const filteredItems = participants.filter(item => {
+  const filteredItems = events.filter(item => {
     const valuesToFilter = [
-      item.pri_nom,
-      item.seg_nom,
-      item.pri_ape,
-      item.seg_ape,
-      item.cedula,
-      item.celular,
-      item.email,
-      item.grado_instruccion,
+      item.name_event,
+      item.start_date,
+      item.end_date,
+      item.event_type_name,
+      item.address,
     ];
 
     return valuesToFilter.some(value =>
@@ -52,55 +49,54 @@ const ParticipantTable = () => {
   // Columnas de la tabla
   const columns = [
     {
-      name: 'Nombre Completo',
-      selector: row => `${row.pri_nom} ${row.seg_nom} ${row.pri_ape} ${row.seg_ape}`,
+      name: 'Nombre del Evento',
+      selector: row => row.name_event,
       sortable: true,
       cell: row => (
         <button
           className="text-blue-500 hover:underline"
-          onClick={() => handleRowClick(row._id)} // Redirige al detalle del participante
+          onClick={() => handleRowClick(row._id)} // Redirige al detalle del evento
         >
-          {`${row.pri_nom} ${row.seg_nom} ${row.pri_ape} ${row.seg_ape}`}
+          {row.name_event}
         </button>
       ),
     },
     {
-      name: 'Cédula',
-      selector: row => row.cedula,
+      name: 'Fecha de Inicio',
+      selector: row => row.start_date,
       sortable: true,
     },
     {
-      name: 'Teléfono',
-      selector: row => row.celular,
+      name: 'Fecha de Fin',
+      selector: row => row.end_date,
       sortable: true,
     },
     {
-      name: 'Email',
-      selector: row => row.email,
-      sortable: true,
+      name: 'Tipo de Evento',
+      selector: row => row.event_type_name,
     },
     {
-      name: 'Grado de Instrucción',
-      selector: row => row.grado_instruccion,
+      name: 'Dirección',
+      selector: row => row.address,
     },
   ];
 
   // Manejador de clic en el nombre
   const handleRowClick = (id) => {
-    navigate(`/participants/${id}`); // Redirige al componente de detalles
+    navigate(`/events/${id}`); // Redirige al componente de detalles
   };
 
   return (
     <div className="p-6 bg-white shadow-md rounded-lg">
       <div className="flex justify-between items-center mb-4">
-      <h2 className="text-2xl font-bold">Lista de Participantes</h2>
-      <button
-        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-        onClick={() => navigate('/participants/new')} // Redirige a la ruta de agregar participante
-      >
-        Agregar Participante
-      </button>
-    </div>
+        <h2 className="text-2xl font-bold">Lista de Eventos</h2>
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          onClick={() => navigate('/events/new')} // Redirige a la ruta de agregar evento
+        >
+          Agregar Evento
+        </button>
+      </div>
 
       {/* Filtros */}
       <div className="mb-4">
@@ -122,10 +118,10 @@ const ParticipantTable = () => {
         progressPending={isLoading}
         persistTableHead
         paginationPerPage={10} // Puedes ajustar esto según tus necesidades
-        paginationRowsPerPageOptions={[5, 10, 20,50,100]} // Opciones para el número de filas por página
+        paginationRowsPerPageOptions={[5, 10, 20, 50, 100]} // Opciones para el número de filas por página
       />
     </div>
   );
 };
 
-export default ParticipantTable;
+export default EventTable;

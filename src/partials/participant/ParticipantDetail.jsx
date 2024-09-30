@@ -58,17 +58,29 @@ const ParticipantDetail = () => {
   };
 
   return (
+    
     <div className="p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-3xl font-bold mb-4">{participant.pri_nom} {participant.seg_nom}</h2>
+      <div className="flex justify-end mb-4">
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          onClick={() => navigate('/participants/new')} // Redirige a la ruta de agregar participante
+        >
+          Agregar Participante
+        </button>
+      </div>
+  
+      <h2 className="text-3xl font-bold mb-4">{participant.pri_nom} {participant.seg_nom} {participant.pri_ape} {participant.seg_ape}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
+          {/* <p><strong>Primer Nombre:</strong> {participant.pri_nom}</p>
+          <p><strong>Segundo Nombre:</strong> {participant.seg_nom}</p>
           <p><strong>Primer Apellido:</strong> {participant.pri_ape}</p>
-          <p><strong>Segundo Apellido:</strong> {participant.seg_ape}</p>
+          <p><strong>Segundo Apellido:</strong> {participant.seg_ape}</p> */}
           <p><strong>Cédula:</strong> {participant.cedula}</p>
           <p><strong>Teléfono:</strong> {participant.celular}</p>
-        </div>
-        <div>
           <p><strong>Email:</strong> {participant.email}</p>
+        </div>
+        <div>          
           <p><strong>Nacionalidad:</strong> {participant.nacionalidad}</p>
           <p><strong>País:</strong> {participant.pais}</p>
           <p><strong>Estado:</strong> {participant.estado}</p>
@@ -109,6 +121,8 @@ const ParticipantDetail = () => {
         >
           Eliminar
         </button>
+        
+        
       </div>
     </div>
   );

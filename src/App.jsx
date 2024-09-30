@@ -4,6 +4,7 @@ import {Routes,Route,useLocation,Navigate,} from 'react-router-dom';
 import { Provider } from 'react-redux'; // Importar Provider
 import store from './store/store'; // Importar el store
 import './charts/ChartjsConfig';
+
 // Import pages
 import Dashboard from './pages/Dashboard';
 import Login from './components/auth/Login';
@@ -13,6 +14,10 @@ import Register from './components/auth/Register';
 import ForgotPassword from './components/auth/ForgotPassword';
 import ParticipantTable from './partials/participant/ParticipantTable';
 import ParticipantDetail from './partials/participant/ParticipantDetail';
+import ParticipantForm from './partials/participant/ParticipantForm';
+import EventTable from './partials/event/EventTable';
+import EventDetail from './partials/event/EventDetail';
+import EventForm from './partials/event/EventForm';
 
 function App() {
 
@@ -39,6 +44,13 @@ function App() {
             {/* componentes hijos de Dashboard */}
             <Route path="/participants" element={<ParticipantTable />} />
             <Route path="/participants/:id" element={<ParticipantDetail />} />
+            <Route path="/participants/edit/:id" element={<ParticipantForm />} />
+            <Route path="/participants/new" element={<ParticipantForm />} />
+
+            <Route path="/events" element={<EventTable />} />
+            <Route path="/events/:id" element={<EventDetail />} />
+            <Route path="/events/edit/:id" element={<EventForm />} />
+            <Route path="/events/new" element={<EventForm />} />
           </Route>
 
 
