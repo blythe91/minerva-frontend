@@ -18,6 +18,14 @@ import ParticipantForm from './partials/participant/ParticipantForm';
 import EventTable from './partials/event/EventTable';
 import EventDetail from './partials/event/EventDetail';
 import EventForm from './partials/event/EventForm';
+import EventRoleTable from './partials/params/eventRole/EventRoleTable';
+import EventRoleForm from './partials/params/eventRole/EventRoleForm';
+import EventRoleDetail from './partials/params/eventRole/EventRoleDetail';
+
+
+
+
+
 
 function App() {
 
@@ -51,6 +59,12 @@ function App() {
             <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/events/edit/:id" element={<EventForm />} />
             <Route path="/events/new" element={<EventForm />} />
+
+
+             <Route path="/event-roles" element={<EventRoleTable />} />
+             <Route path="/event-roles/:id" element={<EventRoleDetail />} />
+             <Route path="/event-roles/new" element={<EventRoleForm />} />
+             <Route path="/event-roles/edit/:id" element={<EventRoleForm />} />
           </Route>
 
 

@@ -40,7 +40,9 @@ const EventDetail = () => {
     const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este evento?');
     if (confirmDelete) {
       try {
+        console.log("entra al try-catch justo antes de la solicitud a la api");
         const response = await Api.delete(`/events/${event._id}`); // Ajusta el endpoint según sea necesario
+        console.log(response);
         if (response.statusCode === 200) {
           showAlertTopEnd('Éxito', 'Evento eliminado correctamente', 'success');
           navigate('/events'); // Redirigir a la lista de eventos
@@ -49,6 +51,7 @@ const EventDetail = () => {
         }
       } catch (error) {
         showAlertTopEnd('Error', 'Hubo un problema al eliminar el evento', 'error');
+        
       }
     }
   };

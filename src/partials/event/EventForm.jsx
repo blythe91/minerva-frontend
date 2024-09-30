@@ -9,6 +9,8 @@ const EventForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [eventTypes, setEventTypes] = useState([]); // Estado para tipos de evento
+  const [coordinations, setCoordinations] = useState([]); // Estado para coordinaciones
 
   // Esquema de validación con Yup
   const validationSchema = Yup.object({
@@ -18,20 +20,16 @@ const EventForm = () => {
     academic_hours: Yup.number()
       .required('Las horas académicas son requeridas')
       .min(0, 'Las horas académicas deben ser un número positivo'),
-    event_type_id: Yup.number()
-      .required('El ID del tipo de evento es requerido')
-      .integer('Debe ser un número entero válido')
-      .min(1, 'Debe ser un número entero válido'),
+    event_type_id: Yup.string()
+      .required('El ID del tipo de evento es requerido'),
     event_type_name: Yup.string()
       .required('El nombre del tipo de evento es requerido')
       .max(255, 'El nombre del tipo de evento no puede exceder 255 caracteres'),
     event_prefix: Yup.string()
       .nullable()
       .max(10, 'El prefijo del evento no puede exceder 10 caracteres'),
-    coordination_id: Yup.number()
-      .required('El ID de la coordinación es requerido')
-      .integer('Debe ser un número entero válido')
-      .min(1, 'Debe ser un número entero válido'),
+    coordination_id: Yup.string()
+      .required('El ID de la coordinación es requerido'),
     coordination_name: Yup.string()
       .required('El nombre de la coordinación es requerido')
       .max(255, 'El nombre de la coordinación no puede exceder 255 caracteres'),
@@ -46,8 +44,29 @@ const EventForm = () => {
       .max(255, 'La dirección no puede exceder 255 caracteres'),
   });
 
-  // Si hay un ID en la URL, cargamos los datos del evento para edición
+  // Fetch de tipos de evento y coordinaciones al cargar el componente
   useEffect(() => {
+    const fetchEventTypes = async () => {
+      const response = await Api.get('/event-types'); // Ajusta la ruta según tu API
+      if (response.statusCode === 200) {
+        setEventTypes(response.data);
+      } else {
+        showAlert('Error', 'No se pudo cargar los tipos de evento', 'error');
+      }
+    };
+
+    const fetchCoordinations = async () => {
+      const response = await Api.get('/coordinations'); // Ajusta la ruta según tu API
+      if (response.statusCode === 200) {
+        setCoordinations(response.data);
+      } else {
+        showAlert('Error', 'No se pudo cargar las coordinaciones', 'error');
+      }
+    };
+
+    fetchEventTypes();
+    fetchCoordinations();
+
     if (id) {
       const fetchEvent = async () => {
         setIsLoading(true);
@@ -81,7 +100,6 @@ const EventForm = () => {
   // Función para manejar la creación o edición
   const handleSubmit = async (values) => {
     setIsLoading(true);
-
     try {
       let response;
       if (id) {
@@ -93,7 +111,6 @@ const EventForm = () => {
       }
 
       if (response.statusCode === 200 || response.statusCode === 201) {
-        // Éxito en la operación
         showAlertTopEnd('Éxito', id ? 'Evento actualizado correctamente' : 'Evento agregado correctamente', 'success');
         navigate('/events');
       } else if (response.statusCode === 422 && response.data.errors) {
@@ -103,11 +120,9 @@ const EventForm = () => {
           showAlert('Error', `${field}: ${errorMsg}`, 'error');
         });
       } else {
-        // Otro tipo de error
         showAlert('Error', response.data.error + ` (${response.statusCode})`, 'error');
       }
     } catch (error) {
-      // Error general
       showAlert('Error', 'Hubo un problema al guardar los datos', 'error');
     }
 
@@ -121,136 +136,146 @@ const EventForm = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">{id ? 'Editar Evento' : 'Crear Evento'}</h1>
-        
-        <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-            enableReinitialize
-        >
-            <Form className="space-y-6">
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">{id ? 'Editar Evento' : 'Crear Evento'}</h1>
+      
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize
+      >
+        {({ setFieldValue }) => (
+          <Form className="space-y-6">
             <div>
-                <label htmlFor="name_event" className="block text-sm font-medium text-gray-700">Nombre del Evento</label>
-                <Field
+              <label htmlFor="name_event" className="block text-sm font-medium text-gray-700">Nombre del Evento</label>
+              <Field
                 name="name_event"
                 type="text"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <ErrorMessage name="name_event" component="div" className="text-red-600 text-sm mt-1" />
+              />
+              <ErrorMessage name="name_event" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
             <div>
-                <label htmlFor="academic_hours" className="block text-sm font-medium text-gray-700">Horas Académicas</label>
-                <Field
+              <label htmlFor="academic_hours" className="block text-sm font-medium text-gray-700">Horas Académicas</label>
+              <Field
                 name="academic_hours"
                 type="number"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <ErrorMessage name="academic_hours" component="div" className="text-red-600 text-sm mt-1" />
+              />
+              <ErrorMessage name="academic_hours" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
             <div>
-                <label htmlFor="event_type_id" className="block text-sm font-medium text-gray-700">ID Tipo de Evento</label>
-                <Field
+              <label htmlFor="event_type_id" className="block text-sm font-medium text-gray-700">Tipo de Evento</label>
+              <Field
+                as="select"
                 name="event_type_id"
-                type="number"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <ErrorMessage name="event_type_id" component="div" className="text-red-600 text-sm mt-1" />
+                onChange={ (e) => {
+                  const selectedId = e.target.value;
+                  const selectedType = eventTypes.find(type => type._id === selectedId);
+                  if (selectedType) {
+                    setFieldValue("event_type_name", selectedType.name_event_type);
+                  }
+                  setFieldValue("event_type_id", selectedId);
+                }}
+              >
+                <option value="" label="Seleccione un tipo de evento" />
+                {eventTypes.map((type) => (
+                  <option key={type._id} value={type._id}>
+                    {type.name_event_type}
+                  </option>
+                ))}
+              </Field>
+              <ErrorMessage name="event_type_id" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
             <div>
-                <label htmlFor="event_type_name" className="block text-sm font-medium text-gray-700">Nombre Tipo de Evento</label>
-                <Field
-                name="event_type_name"
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <ErrorMessage name="event_type_name" component="div" className="text-red-600 text-sm mt-1" />
-            </div>
-
-            <div>
-                <label htmlFor="event_prefix" className="block text-sm font-medium text-gray-700">Prefijo del Evento (opcional)</label>
-                <Field
+              <label htmlFor="event_prefix" className="block text-sm font-medium text-gray-700">Prefijo del Evento (opcional)</label>
+              <Field
                 name="event_prefix"
                 type="text"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <ErrorMessage name="event_prefix" component="div" className="text-red-600 text-sm mt-1" />
+              />
+              <ErrorMessage name="event_prefix" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
             <div>
-                <label htmlFor="coordination_id" className="block text-sm font-medium text-gray-700">ID Coordinación</label>
-                <Field
+              <label htmlFor="coordination_id" className="block text-sm font-medium text-gray-700">Coordinación</label>
+              <Field
+                as="select"
                 name="coordination_id"
-                type="number"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <ErrorMessage name="coordination_id" component="div" className="text-red-600 text-sm mt-1" />
+                onChange={ (e) => {
+                  const selectedId = e.target.value;
+                  const selectedCoordination = coordinations.find(coord => coord._id === selectedId);
+                  if (selectedCoordination) {
+                    setFieldValue("coordination_name", selectedCoordination.name_coordination);
+                  }
+                  setFieldValue("coordination_id", selectedId);
+                }}
+              >
+                <option value="" label="Seleccione una coordinación" />
+                {coordinations.map((coord) => (
+                  <option key={coord._id} value={coord._id}>
+                    {coord.name_coordination}
+                  </option>
+                ))}
+              </Field>
+              <ErrorMessage name="coordination_id" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
             <div>
-                <label htmlFor="coordination_name" className="block text-sm font-medium text-gray-700">Nombre de la Coordinación</label>
-                <Field
-                name="coordination_name"
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <ErrorMessage name="coordination_name" component="div" className="text-red-600 text-sm mt-1" />
-            </div>
-
-            <div>
-                <label htmlFor="start_date" className="block text-sm font-medium text-gray-700">Fecha de Inicio</label>
-                <Field
+              <label htmlFor="start_date" className="block text-sm font-medium text-gray-700">Fecha de Inicio</label>
+              <Field
                 name="start_date"
                 type="date"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <ErrorMessage name="start_date" component="div" className="text-red-600 text-sm mt-1" />
+              />
+              <ErrorMessage name="start_date" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
             <div>
-                <label htmlFor="end_date" className="block text-sm font-medium text-gray-700">Fecha de Finalización</label>
-                <Field
+              <label htmlFor="end_date" className="block text-sm font-medium text-gray-700">Fecha de Finalización</label>
+              <Field
                 name="end_date"
                 type="date"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <ErrorMessage name="end_date" component="div" className="text-red-600 text-sm mt-1" />
+              />
+              <ErrorMessage name="end_date" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
             <div>
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700">Dirección (opcional)</label>
-                <Field
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700">Dirección (opcional)</label>
+              <Field
                 name="address"
                 type="text"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <ErrorMessage name="address" component="div" className="text-red-600 text-sm mt-1" />
+              />
+              <ErrorMessage name="address" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
-            <div className="flex justify-between items-center mt-4">
-                <button
-                type="submit"
-                disabled={isLoading}
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-                >
-                {isLoading ? 'Cargando...' : id ? 'Actualizar' : 'Crear'}
-                </button>
-                <button
+            <div className="flex justify-between">
+              <button
                 type="button"
                 onClick={handleBack}
-                className="px-4 py-2 bg-gray-400 
-                text-white rounded"
-                >
+                className="mt-4 inline-flex justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
                 Volver
-                </button>
+              </button>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="mt-4 inline-flex justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                {isLoading ? 'Cargando...' : id ? 'Actualizar Evento' : 'Crear Evento'}
+              </button>
             </div>
-            </Form>
-        </Formik>
+          </Form>
+        )}
+      </Formik>
     </div>
-
   );
 };
 

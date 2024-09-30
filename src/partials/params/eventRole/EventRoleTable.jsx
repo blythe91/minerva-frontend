@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
-import { showAlert } from '../../components/utils/Alert'; // alertas
-import { Api } from '../../services/Api'; // conexión a la API
+import { showAlertTopEnd, showAlert } from '../../../components/utils/Alert'; // alertas
+import { Api } from '../../../services/Api'; // conexión a la API
 import { useNavigate } from 'react-router-dom'; // Importa el hook useNavigate para la navegación
 
-const EventTable = () => {
-  const [events, setEvents] = useState([]);
+
+const EventRoleTable = () => {
+  const [roles, setRoles] = useState([]);
   const [filterText, setFilterText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate(); // Inicializa useNavigate
 
-  // Fetch Events
+  // Fetch Roles
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchRoles = async () => {
       setIsLoading(true);
       try {
-        const response = await Api.get('/events'); // Ajusta el endpoint según sea necesario
-
+        console.log("ingresa al fetchRoles");
+        const response = await Api.get('/event-roles'); // Ajusta el endpoint según sea necesario
+        console.log("Luego de la petición a la API");
         if (response.statusCode === 200) {
-          setEvents(response.data);
+          setRoles(response.data);
         } else {
-          showAlert('Error', 'No se pudieron cargar los eventos', 'error');
+          showAlert('Error', 'No se pudieron cargar los roles', 'error');
+          console.log(response);
         }
       } catch (error) {
         showAlert('Error', 'Hubo un problema con la conexión', 'error');
@@ -28,17 +31,14 @@ const EventTable = () => {
       setIsLoading(false);
     };
 
-    fetchEvents();
+    fetchRoles();
   }, []);
 
   // Función para filtrar los elementos
-  const filteredItems = events.filter(item => {
+  const filteredItems = roles.filter(item => {
     const valuesToFilter = [
-      item.name_event,
-      item.start_date,
-      item.end_date,
-      item.event_type_name,
-      item.coordination_name, // Ahora filtramos por nombre de coordinación en lugar de dirección
+      item.name_event_role,
+      item.description_event_role,
     ];
 
     return valuesToFilter.some(value =>
@@ -49,52 +49,39 @@ const EventTable = () => {
   // Columnas de la tabla
   const columns = [
     {
-      name: 'Nombre del Evento',
-      selector: row => row.name_event,
+      name: 'Nombre del Rol',
+      selector: row => row.name_event_role,
       sortable: true,
       cell: row => (
         <button
           className="text-blue-500 hover:underline"
-          onClick={() => handleRowClick(row._id)} // Redirige al detalle del evento
+          onClick={() => handleRowClick(row._id)} // Redirige al detalle del rol
         >
-          {row.name_event}
+          {row.name_event_role}
         </button>
       ),
     },
     {
-      name: 'Fecha de Inicio',
-      selector: row => row.start_date,
+      name: 'Descripción',
+      selector: row => row.description_event_role,
       sortable: true,
-    },
-    {
-      name: 'Fecha de Fin',
-      selector: row => row.end_date,
-      sortable: true,
-    },
-    {
-      name: 'Coordinación Encargada', // Anteriormente era 'Tipo de Evento'
-      selector: row => row.coordination_name, // Mostrar nombre de coordinación
-    },
-    {
-      name: 'Tipo de Evento', // Anteriormente era 'Dirección'
-      selector: row => row.event_type_name, // Mostrar tipo de evento aquí
     },
   ];
 
   // Manejador de clic en el nombre
   const handleRowClick = (id) => {
-    navigate(`/events/${id}`); // Redirige al componente de detalles
+    navigate(`/event-roles/${id}`); // Redirige al componente de detalles
   };
 
   return (
     <div className="p-6 bg-white shadow-md rounded-lg">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Lista de Eventos</h2>
+        <h2 className="text-2xl font-bold">Lista de Roles de Eventos</h2>
         <button
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          onClick={() => navigate('/events/new')} // Redirige a la ruta de agregar evento
+          onClick={() => navigate('/event-roles/new')} // Redirige a la ruta de agregar rol
         >
-          Agregar Evento
+          Agregar Rol
         </button>
       </div>
 
@@ -124,4 +111,4 @@ const EventTable = () => {
   );
 };
 
-export default EventTable;
+export default EventRoleTable;
