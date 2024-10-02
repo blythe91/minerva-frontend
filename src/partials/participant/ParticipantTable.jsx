@@ -57,7 +57,7 @@ const ParticipantTable = () => {
       sortable: true,
       cell: row => (
         <button
-          className="text-blue-500 hover:underline"
+          className="text-blue-500 hover:underline text-left"
           onClick={() => handleRowClick(row._id)} // Redirige al detalle del participante
         >
           {`${row.pri_nom} ${row.seg_nom} ${row.pri_ape} ${row.seg_ape}`}

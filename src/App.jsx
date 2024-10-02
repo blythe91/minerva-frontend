@@ -21,6 +21,7 @@ import EventForm from './partials/event/EventForm';
 import EventRoleTable from './partials/params/eventRole/EventRoleTable';
 import EventRoleForm from './partials/params/eventRole/EventRoleForm';
 import EventRoleDetail from './partials/params/eventRole/EventRoleDetail';
+import UnderConstruction from './partials/UnderConstruction';
 
 
 
@@ -66,7 +67,7 @@ function App() {
              <Route path="/event-roles/new" element={<EventRoleForm />} />
              <Route path="/event-roles/edit/:id" element={<EventRoleForm />} />
           </Route>
-
+          <Route path="/empty" element={<UnderConstruction />} />
 
           {/* <Route path="/" element={
             <ProtectedRoute> 

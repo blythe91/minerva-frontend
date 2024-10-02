@@ -114,21 +114,28 @@ const EventRoleForm = () => {
               <ErrorMessage name="description_event_role" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
-            <div className="flex justify-end space-x-4">
-              <button
-                type="button"
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                onClick={handleBack}
-              >
-                Volver
-              </button>
+            <div className="flex justify space-x-4">
               <button
                 type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:blue-offset-2 focus:ring-blue-500"
                 disabled={isLoading}
               >
                 {isLoading ? 'Guardando...' : id ? 'Actualizar Rol' : 'Crear Rol'}
               </button>
+
+              <button
+                type="button"
+                className="px-4 py-2 bg-gray-400 
+                text-white rounded hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                onClick={handleBack}
+              >
+                Volver
+              </button>
+
+              
+              
+
+
             </div>
           </Form>
         )}

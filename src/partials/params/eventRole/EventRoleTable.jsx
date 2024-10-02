@@ -54,7 +54,7 @@ const EventRoleTable = () => {
       sortable: true,
       cell: row => (
         <button
-          className="text-blue-500 hover:underline"
+          className="text-blue-500 hover:underline text-left"
           onClick={() => handleRowClick(row._id)} // Redirige al detalle del rol
         >
           {row.name_event_role}

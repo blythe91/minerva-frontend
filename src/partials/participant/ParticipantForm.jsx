@@ -346,14 +346,14 @@ const handleSubmit = async (values) => {
                 </div>
 
                 {/* Botones */}
-                <div className="flex justify-between">
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
-                    {id ? 'Actualizar' : 'Agregar'} Participante
-                </button>
-                <button type="button" onClick={handleBack} className="px-4 py-2 bg-gray-400 
-                text-white rounded">
-                    Volver
-                </button>
+                <div className="flex justify space-x-4">
+                  <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:blue-offset-2 focus:ring-blue-500">
+                      {id ? 'Actualizar' : 'Agregar'} Participante
+                  </button>
+                  <button type="button" onClick={handleBack} className="px-4 py-2 bg-gray-400 
+                  text-white rounded hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                      Volver
+                  </button>  
                 
 
                 
