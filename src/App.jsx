@@ -22,6 +22,9 @@ import EventRoleTable from './partials/params/eventRole/EventRoleTable';
 import EventRoleForm from './partials/params/eventRole/EventRoleForm';
 import EventRoleDetail from './partials/params/eventRole/EventRoleDetail';
 import UnderConstruction from './partials/UnderConstruction';
+import CoordinationTable from './partials/params/coordination/CoordinationTable';
+import EventTypeTable from './partials/params/eventType/EventTypeTable';
+import ParticipantTypeTable from './partials/params/participantType/ParticipantTypeTable';
 
 
 
@@ -62,10 +65,35 @@ function App() {
             <Route path="/events/new" element={<EventForm />} />
 
 
+              {/* parámetros del sistema */}
              <Route path="/event-roles" element={<EventRoleTable />} />
              <Route path="/event-roles/:id" element={<EventRoleDetail />} />
              <Route path="/event-roles/new" element={<EventRoleForm />} />
              <Route path="/event-roles/edit/:id" element={<EventRoleForm />} />
+
+             <Route path="/coordinations" element={<CoordinationTable />} />
+{/*          <Route path="/coordinations/:id" element={<CoordinationDetail />} />
+             <Route path="/coordinations/new" element={<CoordinationForm />} />
+             <Route path="/coordinations/edit/:id" element={<CoordinationForm />} /> */}
+
+             <Route path="/event-types" element={<EventTypeTable />} />
+
+             <Route path="/participant-types" element={<ParticipantTypeTable />} />
+             {/* 
+             <Route path="/event-types/:id" element={<EventTypeDetail />} />
+             <Route path="/event-types/new" element={<EventTypeForm />} />
+             <Route path="/event-types/edit/:id" element={<EventTypeForm />} />
+
+             
+             <Route path="/participant-types/:id" element={<ParticipantTypeDetail />} />
+             <Route path="/participant-types/new" element={<ParticipantTypeForm />} />
+             <Route path="/participant-types/edit/:id" element={<ParticipantTypeForm />} />
+
+             <Route path="/certificate-types" element={<CertificateTypeTable />} />
+             <Route path="/certificate-types/:id" element={<CertificateTypeDetail />} />
+             <Route path="/certificate-types/new" element={<CertificateTypeForm />} />
+             <Route path="/certificate-types/edit/:id" element={<CertificateTypeForm />} /> */}
+             
           </Route>
           <Route path="/empty" element={<UnderConstruction />} />
 
