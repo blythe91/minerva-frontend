@@ -73,6 +73,8 @@ const CertificateTypeDetail = () => {
         <div>
           <p><strong>Nombre del Tipo de Certificado:</strong> {certificateType.name_certificate_type}</p>
           <p><strong>Descripción:</strong> {certificateType.description_certificate_type || 'No tiene descripción.'}</p>
+          <p><strong>Creado en:</strong> {new Date(certificateType.created_at).toLocaleDateString()}</p>
+          <p><strong>Actualizado en:</strong> {new Date(certificateType.updated_at).toLocaleDateString()}</p>
         </div>
       </div>
 
