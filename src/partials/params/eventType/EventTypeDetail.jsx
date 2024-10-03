@@ -3,52 +3,52 @@ import { showAlertTopEnd } from '../../../components/utils/Alert'; // alertas
 import { Api } from '../../../services/Api'; // conexión a la API
 import { useParams, useNavigate } from 'react-router-dom';
 
-const EventRoleDetail = () => {
-  const { id } = useParams(); // Obtiene el ID del rol desde la URL
-  const [role, setRole] = useState(null);
+const EventTypeDetail = () => {
+  const { id } = useParams(); // Obtiene el ID del tipo de evento desde la URL
+  const [eventType, setEventType] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate(); // Hook para navegar a otras rutas
 
   useEffect(() => {
-    const fetchRole = async () => {
-      const response = await Api.get(`/event-roles/${id}`); // Ajusta el endpoint según sea necesario
+    const fetchEventType = async () => {
+      const response = await Api.get(`/event-types/${id}`); // Ajusta el endpoint según sea necesario
       if (response.statusCode === 200) {
-        setRole(response.data);
+        setEventType(response.data);
       } else {
-        showAlertTopEnd('Error', 'No se pudo cargar la información del rol', 'error');
+        showAlertTopEnd('Error', 'No se pudo cargar la información del tipo de evento', 'error');
       }
       setIsLoading(false);
     };
 
-    fetchRole();
+    fetchEventType();
   }, [id]);
 
   if (isLoading) {
     return <div className="p-6">Cargando...</div>;
   }
 
-  if (!role) {
-    return <div className="p-6">No se encontró el rol.</div>;
+  if (!eventType) {
+    return <div className="p-6">No se encontró el tipo de evento.</div>;
   }
 
   // Funciones de manejo de eventos
   const handleEdit = () => {
-    navigate(`/event-roles/edit/${role._id}`); // Ajusta la ruta de edición según tu estructura
+    navigate(`/event-types/edit/${eventType._id}`); // Ajusta la ruta de edición según tu estructura
   };
 
   const handleDelete = async () => {
-    const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este rol?');
+    const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este tipo de evento?');
     if (confirmDelete) {
       try {
-        const response = await Api.delete(`/event-roles/${role._id}`); // Ajusta el endpoint según sea necesario
+        const response = await Api.delete(`/event-types/${eventType._id}`); // Ajusta el endpoint según sea necesario
         if (response.statusCode === 200) {
-          showAlertTopEnd('Éxito', 'Rol eliminado correctamente', 'success');
-          navigate('/event-roles'); // Redirigir a la lista de roles
+          showAlertTopEnd('Éxito', 'Tipo de evento eliminado correctamente', 'success');
+          navigate('/event-types'); // Redirigir a la lista de tipos de eventos
         } else {
-          showAlertTopEnd('Error', 'No se pudo eliminar el rol', 'error');
+          showAlertTopEnd('Error', 'No se pudo eliminar el tipo de evento', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al eliminar el rol', 'error');
+        showAlertTopEnd('Error', 'Hubo un problema al eliminar el tipo de evento', 'error');
       }
     }
   };
@@ -62,19 +62,18 @@ const EventRoleDetail = () => {
       <div className="flex justify-end mb-4">
         <button
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          onClick={() => navigate('/event-roles/new')} // Redirige a la ruta de agregar rol
+          onClick={() => navigate('/event-types/new')} // Redirige a la ruta de agregar tipo de evento
         >
-          Agregar Rol
+          Agregar Tipo de Evento
         </button>
       </div>
 
-      <h2 className="text-3xl font-bold mb-4">{role.name_event_role}</h2>
+      <h2 className="text-3xl font-bold mb-4">{eventType.name_event_type}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
-          <p><strong>Nombre del Rol:</strong> {role.name_event_role}</p>
-          <p><strong>Descripción:</strong> {role.description_event_role}</p>
-          <p><strong>Creado en:</strong> {new Date(role.created_at).toLocaleDateString()}</p>
-          <p><strong>Actualizado en:</strong> {new Date(role.updated_at).toLocaleDateString()}</p>
+          <p><strong>Nombre del Tipo de Evento:</strong> {eventType.name_event_type}</p>
+          <p><strong>Creado en:</strong> {new Date(eventType.created_at).toLocaleDateString()}</p>
+          <p><strong>Actualizado en:</strong> {new Date(eventType.updated_at).toLocaleDateString()}</p>
         </div>
       </div>
 
@@ -102,4 +101,4 @@ const EventRoleDetail = () => {
   );
 };
 
-export default EventRoleDetail;
+export default EventTypeDetail;
