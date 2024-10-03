@@ -31,6 +31,8 @@ import CertificateTypeDetail from './partials/params/certificateType/Certificate
 import CoordinationDetail from './partials/params/coordination/CoordinationDetail';
 import CoordinationForm from './partials/params/coordination/CoordinationForm';
 import EventTypeDetail from './partials/params/eventType/EventTypeDetail';
+import ParticipantTypeDetail from './partials/params/participantType/ParticipantTypeDetail';
+import ParticipantTypeForm from './partials/params/participantType/ParticipantTypeForm';
 
 
 function App() {
@@ -84,6 +86,9 @@ function App() {
              <Route path="/event-types/edit/:id" element={<EventTypeForm />} /> */}
 
              <Route path="/participant-types" element={<ParticipantTypeTable />} />
+             <Route path="/participant-types/:id" element={<ParticipantTypeDetail />} />
+             <Route path="/participant-types/new" element={<ParticipantTypeForm />} />
+             <Route path="/participant-types/edit/:id" element={<ParticipantTypeForm />} />
 
              <Route path="/certificate-types" element={<CertificateTypeTable />} />
              <Route path="/certificate-types/new" element={<CertificateTypeForm />} />
@@ -94,9 +99,8 @@ function App() {
              
 
              
-             <Route path="/participant-types/:id" element={<ParticipantTypeDetail />} />
-             <Route path="/participant-types/new" element={<ParticipantTypeForm />} />
-             <Route path="/participant-types/edit/:id" element={<ParticipantTypeForm />} />
+             
+             
 
               */}
              
