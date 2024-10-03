@@ -28,6 +28,8 @@ import ParticipantTypeTable from './partials/params/participantType/ParticipantT
 import CertificateTypeTable from './partials/params/certificateType/CertificateTypeTable';
 import CertificateTypeForm from './partials/params/certificateType/CertificateTypeForm';
 import CertificateTypeDetail from './partials/params/certificateType/CertificateTypeDetail';
+import CoordinationDetail from './partials/params/coordination/CoordinationDetail';
+import CoordinationForm from './partials/params/coordination/CoordinationForm';
 
 
 function App() {
@@ -71,9 +73,9 @@ function App() {
              <Route path="/event-roles/edit/:id" element={<EventRoleForm />} />
 
              <Route path="/coordinations" element={<CoordinationTable />} />
-{/*          <Route path="/coordinations/:id" element={<CoordinationDetail />} />
+             <Route path="/coordinations/:id" element={<CoordinationDetail />} />
              <Route path="/coordinations/new" element={<CoordinationForm />} />
-             <Route path="/coordinations/edit/:id" element={<CoordinationForm />} /> */}
+             <Route path="/coordinations/edit/:id" element={<CoordinationForm />} />
 
              <Route path="/event-types" element={<EventTypeTable />} />
 
