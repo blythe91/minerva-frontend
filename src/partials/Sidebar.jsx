@@ -303,7 +303,7 @@ function Sidebar({
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Lista de Participantes
+                                BD de Participantes
                               </span>
                             </NavLink>
                           </li>
@@ -316,7 +316,7 @@ function Sidebar({
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Grupos de Participantes
+                                Participantes por Evento
                               </span>
                             </NavLink>
                           </li>
@@ -365,13 +365,13 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="/empty"
+                              to="/staff"
                               className={({ isActive }) =>
                                 "block transition duration-150 truncate " + (isActive ? "text-blue-700" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Organizadores
+                                BD de Organizadores
                               </span>
                             </NavLink>
                           </li>
@@ -384,7 +384,7 @@ function Sidebar({
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Patrocinantes
+                                BD de Patrocinantes
                               </span>
                             </NavLink>
                           </li>

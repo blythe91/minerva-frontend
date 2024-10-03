@@ -354,9 +354,6 @@ const handleSubmit = async (values) => {
                   text-white rounded hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                       Volver
                   </button>  
-                
-
-                
                 </div>
             </Form>
             </Formik>
