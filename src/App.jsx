@@ -33,6 +33,7 @@ import CoordinationForm from './partials/params/coordination/CoordinationForm';
 import EventTypeDetail from './partials/params/eventType/EventTypeDetail';
 import ParticipantTypeDetail from './partials/params/participantType/ParticipantTypeDetail';
 import ParticipantTypeForm from './partials/params/participantType/ParticipantTypeForm';
+import EventTypeForm from './partials/params/eventType/EventTypeForm';
 
 
 function App() {
@@ -82,8 +83,9 @@ function App() {
 
              <Route path="/event-types" element={<EventTypeTable />} />
              <Route path="/event-types/:id" element={<EventTypeDetail />} />
-      {/*        <Route path="/event-types/new" element={<EventTypeForm />} />
-             <Route path="/event-types/edit/:id" element={<EventTypeForm />} /> */}
+             <Route path="/event-types/new" element={<EventTypeForm />} />
+             <Route path="/event-types/edit/:id" element={<EventTypeForm />} />
+
 
              <Route path="/participant-types" element={<ParticipantTypeTable />} />
              <Route path="/participant-types/:id" element={<ParticipantTypeDetail />} />
@@ -94,15 +96,6 @@ function App() {
              <Route path="/certificate-types/new" element={<CertificateTypeForm />} />
              <Route path="/certificate-types/edit/:id" element={<CertificateTypeForm />} />
              <Route path="/certificate-types/:id" element={<CertificateTypeDetail />} />
-
-             {/* 
-             
-
-             
-             
-             
-
-              */}
              
           </Route>
           <Route path="/empty" element={<UnderConstruction />} />
