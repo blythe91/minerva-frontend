@@ -132,10 +132,6 @@ const EventRoleForm = () => {
                 Volver
               </button>
 
-              
-              
-
-
             </div>
           </Form>
         )}

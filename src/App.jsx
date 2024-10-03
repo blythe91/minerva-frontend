@@ -25,10 +25,9 @@ import UnderConstruction from './partials/UnderConstruction';
 import CoordinationTable from './partials/params/coordination/CoordinationTable';
 import EventTypeTable from './partials/params/eventType/EventTypeTable';
 import ParticipantTypeTable from './partials/params/participantType/ParticipantTypeTable';
-
-
-
-
+import CertificateTypeTable from './partials/params/certificateType/CertificateTypeTable';
+import CertificateTypeForm from './partials/params/certificateType/CertificateTypeForm';
+import CertificateTypeDetail from './partials/params/certificateType/CertificateTypeDetail';
 
 
 function App() {
@@ -79,6 +78,12 @@ function App() {
              <Route path="/event-types" element={<EventTypeTable />} />
 
              <Route path="/participant-types" element={<ParticipantTypeTable />} />
+
+             <Route path="/certificate-types" element={<CertificateTypeTable />} />
+             <Route path="/certificate-types/new" element={<CertificateTypeForm />} />
+             <Route path="/certificate-types/edit/:id" element={<CertificateTypeForm />} />
+             <Route path="/certificate-types/:id" element={<CertificateTypeDetail />} />
+
              {/* 
              <Route path="/event-types/:id" element={<EventTypeDetail />} />
              <Route path="/event-types/new" element={<EventTypeForm />} />
@@ -89,10 +94,7 @@ function App() {
              <Route path="/participant-types/new" element={<ParticipantTypeForm />} />
              <Route path="/participant-types/edit/:id" element={<ParticipantTypeForm />} />
 
-             <Route path="/certificate-types" element={<CertificateTypeTable />} />
-             <Route path="/certificate-types/:id" element={<CertificateTypeDetail />} />
-             <Route path="/certificate-types/new" element={<CertificateTypeForm />} />
-             <Route path="/certificate-types/edit/:id" element={<CertificateTypeForm />} /> */}
+              */}
              
           </Route>
           <Route path="/empty" element={<UnderConstruction />} />

@@ -4,7 +4,6 @@ import { showAlertTopEnd, showAlert } from '../../../components/utils/Alert'; //
 import { Api } from '../../../services/Api'; // conexión a la API
 import { useNavigate } from 'react-router-dom'; // Importa el hook useNavigate para la navegación
 
-
 const EventRoleTable = () => {
   const [roles, setRoles] = useState([]);
   const [filterText, setFilterText] = useState('');
@@ -48,6 +47,11 @@ const EventRoleTable = () => {
 
   // Columnas de la tabla
   const columns = [
+    {
+      name: 'ID',
+      selector: row => row._id,
+      sortable: true,
+    },
     {
       name: 'Nombre del Rol',
       selector: row => row.name_event_role,
