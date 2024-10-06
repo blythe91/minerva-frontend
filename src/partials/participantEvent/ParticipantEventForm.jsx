@@ -97,54 +97,74 @@ const ParticipantEventForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Validar que todos los campos requeridos estén llenos
-    const newErrors = {};
-    if (!participantEvent.cedula) newErrors.cedula = "Seleccione un participante.";
-    if (!participantEvent.event_prefix) newErrors.event_prefix = "Seleccione un evento.";
-    if (!participantEvent.event_type_name) newErrors.event_type_name = "El tipo de evento es requerido.";
-    if (!participantEvent.participant_type_id) newErrors.participant_type_id = "Seleccione un tipo de participante.";
-    if (!participantEvent.certificate_type_id) newErrors.certificate_type_id = "Seleccione un tipo de certificado.";
+        e.preventDefault();
+        setIsLoading(true);
 
-    if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-        return;
-    }
-  
-    // Preparar el objeto para la API
-    const payload = {
-        participant_id: String(participants.find(p => String(p.cedula) === String(participantEvent.cedula))?._id || ""),
-        cedula: String(participantEvent.cedula),
-        pri_nom: participantEvent.pri_nom,
-        seg_nom: participantEvent.seg_nom,
-        pri_ape: participantEvent.pri_ape,
-        seg_ape: participantEvent.seg_ape,
-        email: participantEvent.email,
-        event_id: String(events.find(ev => ev.event_prefix === participantEvent.event_prefix)?._id || ""),
-        name_event: participantEvent.name_event,
-        event_type_name: participantEvent.event_type_name,
-        coordination_name: participantEvent.coordination_name,
-        event_prefix: participantEvent.event_prefix,
-        participant_type_id: String(participantEvent.participant_type_id || ""),
-        name_participant_type: participantTypes.find(pt => pt._id === participantEvent.participant_type_id)?.name_participant_type,
-        certificate_type_id: String(participantEvent.certificate_type_id || ""),
-        name_certificate_type: certificateTypes.find(ct => ct._id === participantEvent.certificate_type_id)?.name_certificate_type,
-      };
-  
-      try {
-        if (id) {
-          await Api.put(`/participant-events/${id}`, payload);
-          showAlertTopEnd("Éxito", "Registro actualizado correctamente", "success");
-        } else {
-          await Api.post("/participant-events", payload);
-          showAlertTopEnd("Éxito", "Registro creado correctamente", "success");
+        // Validar que todos los campos requeridos estén llenos
+        const newErrors = {};
+        if (!participantEvent.cedula) newErrors.cedula = "Seleccione un participante.";
+        if (!participantEvent.event_prefix) newErrors.event_prefix = "Seleccione un evento.";
+        if (!participantEvent.event_type_name) newErrors.event_type_name = "El tipo de evento es requerido.";
+        if (!participantEvent.participant_type_id) newErrors.participant_type_id = "Seleccione un tipo de participante.";
+        if (!participantEvent.certificate_type_id) newErrors.certificate_type_id = "Seleccione un tipo de certificado.";
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            setIsLoading(false);
+            return;
         }
-        navigate("/participant-events");
-      } catch (error) {
-        showAlertTopEnd("Error", "Hubo un problema al guardar el registro", "error");
-        console.error(error);
-      }
-  };
+
+        // Preparar el objeto para la API
+        const payload = {
+            participant_id: String(participants.find(p => String(p.cedula) === String(participantEvent.cedula))?._id || ""),
+            cedula: String(participantEvent.cedula),
+            pri_nom: participantEvent.pri_nom,
+            seg_nom: participantEvent.seg_nom,
+            pri_ape: participantEvent.pri_ape,
+            seg_ape: participantEvent.seg_ape,
+            email: participantEvent.email,
+            event_id: String(events.find(ev => ev.event_prefix === participantEvent.event_prefix)?._id || ""),
+            name_event: participantEvent.name_event,
+            event_type_name: participantEvent.event_type_name,
+            coordination_name: participantEvent.coordination_name,
+            event_prefix: participantEvent.event_prefix,
+            participant_type_id: String(participantEvent.participant_type_id || ""),
+            name_participant_type: participantTypes.find(pt => pt._id === participantEvent.participant_type_id)?.name_participant_type,
+            certificate_type_id: String(participantEvent.certificate_type_id || ""),
+            name_certificate_type: certificateTypes.find(ct => ct._id === participantEvent.certificate_type_id)?.name_certificate_type,
+        };
+
+        try {
+            let response;
+            if (id) {
+                // Actualizar registro
+                response = await Api.put(`/participant-events/${id}`, payload);
+            } else {
+                // Crear nuevo registro
+                response = await Api.post("/participant-events", payload);
+            }
+
+            if (response.statusCode === 200 || response.statusCode === 201) {
+                showAlertTopEnd("Éxito", id ? "Registro actualizado correctamente" : "Registro creado correctamente", "success");
+                navigate("/participant-events");
+            } else if (response.statusCode === 422 && response.data.errors) {
+                // Manejar errores de validación
+                Object.keys(response.data.errors).forEach((field) => {
+                    const errorMsg = response.data.errors[field].join(" ");
+                    showAlert("Error", `${field}: ${errorMsg}`, "error");
+                });
+            } else {
+                // Otro tipo de error
+                showAlert("Error", response.data.error + ` (${response.statusCode})`, "error");
+            }
+        } catch (error) {
+            showAlertTopEnd("Error", "Hubo un problema al guardar el registro", "error");
+            console.error(error);
+        }
+
+        setIsLoading(false);
+    };
+
  
   
 
