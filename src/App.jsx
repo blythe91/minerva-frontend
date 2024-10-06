@@ -39,6 +39,7 @@ import StaffDetail from './partials/staff/StaffDetail';
 import StaffForm from './partials/staff/StaffForm';
 import ParticipantEventTable from './partials/participantEvent/ParticipantEventTable';
 import ParticipantEventDetail from './partials/participantEvent/ParticipantEventDetail';
+import ParticipantEventForm from './partials/participantEvent/ParticipantEventForm';
 
 
 function App() {
@@ -83,7 +84,8 @@ function App() {
 
             <Route path="/participant-events" element={<ParticipantEventTable />} />
             <Route path="/participant-events/:id" element={<ParticipantEventDetail />} />
-
+            <Route path="/participant-events/new" element={<ParticipantEventForm />} />
+            <Route path="/participant-events/edit/:id" element={<ParticipantEventForm />} />
 
               {/* parámetros del sistema */}
              <Route path="/event-roles" element={<EventRoleTable />} />
