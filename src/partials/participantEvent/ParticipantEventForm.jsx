@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Api } from "../../services/Api";
 import { useParams, useNavigate } from "react-router-dom";
-import { showAlertTopEnd } from "../../components/utils/Alert";
+import { showAlertTopEnd, showAlert } from "../../components/utils/Alert";
 
 const ParticipantEventForm = () => {
   const { id } = useParams(); // para obtener el ID si se está editando
   const navigate = useNavigate();
-  
+
+  const [isLoading, setIsLoading] = useState(false);
   const [participantEvent, setParticipantEvent] = useState({
     cedula: "",
     pri_nom: "",
@@ -164,196 +165,210 @@ const ParticipantEventForm = () => {
 
         setIsLoading(false);
     };
-
  
-  
+ 
+    const handleBack = () => {
+      navigate(-1); // Navega a la página anterior
+    };
 
   return (
     <form onSubmit={handleSubmit} className="p-6 bg-white shadow-md rounded-lg space-y-6">
-      <h2 className="text-2xl font-bold">Formulario de Participante en Evento</h2>
-  
-      {/* Sección Datos de Participante */}
+    <div className="flex justify-end mb-4">
+      <button
+        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        onClick={() => navigate('/participants/new')}
+      >
+        Agregar Participante
+      </button>
+    </div>
+
+    <h2 className="text-3xl font-bold mb-4">Formulario de Participante en Evento</h2>
+
+    {/* Sección Datos de Participante */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       <div>
-        <h3 className="font-bold mb-2">Datos de Participante</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium">Cédula</label>
-            <select
-              name="cedula"
-              value={participantEvent.cedula}
-              onChange={handleParticipantChange}
-              className="form-select"
-            >
-              <option value="">Seleccione un participante</option>
-              {participants.map((p) => (
-                <option key={p._id} value={p.cedula}>
-                  {p.cedula}
-                </option>
-              ))}
-            </select>
-            {errors.cedula && <p className="text-red-500 text-sm">{errors.cedula}</p>}
-          </div>
-  
-          <div>
-            <label className="block text-sm font-medium">Correo Electrónico</label>
-            <input
-              type="text"
-              name="email"
-              value={participantEvent.email}
-              readOnly
-              className="form-input"
-            />
-          </div>
-  
-          <div>
-            <label className="block text-sm font-medium">Primer Nombre</label>
-            <input
-              type="text"
-              name="pri_nom"
-              value={participantEvent.pri_nom}
-              readOnly
-              className="form-input"
-            />
-          </div>
-  
-          <div>
-            <label className="block text-sm font-medium">Primer Apellido</label>
-            <input
-              type="text"
-              name="pri_ape"
-              value={participantEvent.pri_ape}
-              readOnly
-              className="form-input"
-            />
-          </div>
-  
-          <div>
-            <label className="block text-sm font-medium">Segundo Nombre</label>
-            <input
-              type="text"
-              name="seg_nom"
-              value={participantEvent.seg_nom}
-              readOnly
-              className="form-input"
-            />
-          </div>
-  
-          <div>
-            <label className="block text-sm font-medium">Segundo Apellido</label>
-            <input
-              type="text"
-              name="seg_ape"
-              value={participantEvent.seg_ape}
-              readOnly
-              className="form-input"
-            />
-          </div>
-        </div>
+        <label className="block text-sm font-medium">Cédula</label>
+        <select
+          name="cedula"
+          value={participantEvent.cedula}
+          onChange={handleParticipantChange}
+          className="form-select"
+        >
+          <option value="">Seleccione un participante</option>
+          {participants.map((p) => (
+            <option key={p._id} value={p.cedula}>
+              {p.cedula}
+            </option>
+          ))}
+        </select>
+        {errors.cedula && <p className="text-red-500 text-sm">{errors.cedula}</p>}
       </div>
-  
-      {/* Sección Datos del Evento */}
+
       <div>
-        <h3 className="font-bold mb-2">Datos del Evento</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium">Prefijo del Evento</label>
-            <select
-              name="event_prefix"
-              value={participantEvent.event_prefix}
-              onChange={handleEventChange}
-              className="form-select"
-            >
-              <option value="">Seleccione un evento</option>
-              {events.map((e) => (
-                <option key={e._id} value={e.event_prefix}>
-                  {e.event_prefix}
-                </option>
-              ))}
-            </select>
-            {errors.event_prefix && <p className="text-red-500 text-sm">{errors.event_prefix}</p>}
-          </div>
-  
-          <div>
-            <label className="block text-sm font-medium">Nombre del Evento</label>
-            <input
-              type="text"
-              name="name_event"
-              value={participantEvent.name_event}
-              readOnly
-              className="form-input"
-            />
-          </div>
-  
-          <div>
-            <label className="block text-sm font-medium">Tipo de Evento</label>
-            <input
-              type="text"
-              name="event_type_name"
-              value={participantEvent.event_type_name} // Campo agregado
-              readOnly
-              className="form-input"
-            />
-          </div>
-  
-          <div>
-            <label className="block text-sm font-medium">Coordinación</label>
-            <input
-              type="text"
-              name="coordination_name"
-              value={participantEvent.coordination_name}
-              readOnly
-              className="form-input"
-            />
-          </div>
-        </div>
+        <label className="block text-sm font-medium">Correo Electrónico</label>
+        <input
+          type="text"
+          name="email"
+          value={participantEvent.email}
+          readOnly
+          className="form-input"
+        />
       </div>
-  
-      {/* Sección Tipos de Participante y Certificado */}
+
       <div>
-        <h3 className="font-bold mb-2">Datos de Certificación</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium">Tipo de Participante</label>
-            <select
-                name="participant_type_id"
-                value={participantEvent.participant_type_id}
-                onChange={handleInputChange} // Esto se mantuvo igual
-                className="form-select"
-                >
-                <option value="">Seleccione un tipo de participante</option>
-                {participantTypes.map((pt) => (
-                    <option key={pt._id} value={pt._id}>
-                    {pt.name_participant_type}
-                    </option>
-                ))}
-            </select>
-            {errors.participant_type_id && <p className="text-red-500 text-sm">{errors.participant_type_id}</p>}
-          </div>
-  
-          <div>
-            <label className="block text-sm font-medium">Tipo de Certificado</label>
-            <select
-                name="certificate_type_id"
-                value={participantEvent.certificate_type_id}
-                onChange={handleInputChange} // Esto se mantuvo igual
-                className="form-select"
-                >
-                <option value="">Seleccione un tipo de certificado</option>
-                {certificateTypes.map((ct) => (
-                    <option key={ct._id} value={ct._id}>
-                    {ct.name_certificate_type}
-                    </option>
-                ))}
-            </select>
-            {errors.certificate_type_id && <p className="text-red-500 text-sm">{errors.certificate_type_id}</p>}
-          </div>
-        </div>
+        <label className="block text-sm font-medium">Primer Nombre</label>
+        <input
+          type="text"
+          name="pri_nom"
+          value={participantEvent.pri_nom}
+          readOnly
+          className="form-input"
+        />
       </div>
-  
-      <button type="submit" className="btn btn-primary">
+
+      <div>
+        <label className="block text-sm font-medium">Primer Apellido</label>
+        <input
+          type="text"
+          name="pri_ape"
+          value={participantEvent.pri_ape}
+          readOnly
+          className="form-input"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Segundo Nombre</label>
+        <input
+          type="text"
+          name="seg_nom"
+          value={participantEvent.seg_nom}
+          readOnly
+          className="form-input"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Segundo Apellido</label>
+        <input
+          type="text"
+          name="seg_ape"
+          value={participantEvent.seg_ape}
+          readOnly
+          className="form-input"
+        />
+      </div>
+    </div>
+
+    {/* Sección Datos del Evento */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div>
+        <label className="block text-sm font-medium">Prefijo del Evento</label>
+        <select
+          name="event_prefix"
+          value={participantEvent.event_prefix}
+          onChange={handleEventChange}
+          className="form-select"
+        >
+          <option value="">Seleccione un evento</option>
+          {events.map((e) => (
+            <option key={e._id} value={e.event_prefix}>
+              {e.event_prefix}
+            </option>
+          ))}
+        </select>
+        {errors.event_prefix && <p className="text-red-500 text-sm">{errors.event_prefix}</p>}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Nombre del Evento</label>
+        <input
+          type="text"
+          name="name_event"
+          value={participantEvent.name_event}
+          readOnly
+          className="form-input"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Tipo de Evento</label>
+        <input
+          type="text"
+          name="event_type_name"
+          value={participantEvent.event_type_name}
+          readOnly
+          className="form-input"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Coordinación</label>
+        <input
+          type="text"
+          name="coordination_name"
+          value={participantEvent.coordination_name}
+          readOnly
+          className="form-input"
+        />
+      </div>
+    </div>
+
+    {/* Sección Tipos de Participante y Certificado */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div>
+        <label className="block text-sm font-medium">Tipo de Participante</label>
+        <select
+          name="participant_type_id"
+          value={participantEvent.participant_type_id}
+          onChange={handleInputChange}
+          className="form-select"
+        >
+          <option value="">Seleccione un tipo de participante</option>
+          {participantTypes.map((pt) => (
+            <option key={pt._id} value={pt._id}>
+              {pt.name_participant_type}
+            </option>
+          ))}
+        </select>
+        {errors.participant_type_id && <p className="text-red-500 text-sm">{errors.participant_type_id}</p>}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Tipo de Certificado</label>
+        <select
+          name="certificate_type_id"
+          value={participantEvent.certificate_type_id}
+          onChange={handleInputChange}
+          className="form-select"
+        >
+          <option value="">Seleccione un tipo de certificado</option>
+          {certificateTypes.map((ct) => (
+            <option key={ct._id} value={ct._id}>
+              {ct.name_certificate_type}
+            </option>
+          ))}
+        </select>
+        {errors.certificate_type_id && <p className="text-red-500 text-sm">{errors.certificate_type_id}</p>}
+      </div>
+    </div>
+
+    <div className="flex space-x-4 mb-4">
+      <button
+        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+        onClick={handleBack}
+      >
+        Volver
+      </button>
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        type="submit"
+      >
         {id ? "Actualizar" : "Agregar"} Participante en Evento
       </button>
-    </form>
+    </div>
+  </form>
+
   );
   
 };

@@ -42,6 +42,26 @@ const EventForm = () => {
     address: Yup.string()
       .nullable()
       .max(255, 'La dirección no puede exceder 255 caracteres'),
+    font_file: Yup.mixed()
+      .nullable()
+      .test('fileType', 'El archivo debe ser un archivo de fuente (ttf, otf)', (value) => {
+        if (!value) return true; // Permitir que el campo sea opcional
+        const allowedTypes = ['font/ttf', 'font/otf'];
+        return value && allowedTypes.includes(value.type);
+      })
+      .test('fileSize', 'El archivo no puede exceder los 10 MB', (value) => {
+        return !value || (value && value.size <= 10000000);
+      }),
+    certificate_template: Yup.mixed()
+      .nullable()
+      .test('fileType', 'La plantilla debe ser una imagen (jpeg, png)', (value) => {
+        if (!value) return true; // Permitir que el campo sea opcional
+        const allowedTypes = ['image/jpeg', 'image/png'];
+        return value && allowedTypes.includes(value.type);
+      })
+      .test('fileSize', 'La imagen no puede exceder los 2 MB', (value) => {
+        return !value || (value && value.size <= 2000000);
+      }),
   });
 
   // Fetch de tipos de evento y coordinaciones al cargar el componente
@@ -99,7 +119,33 @@ const EventForm = () => {
 
   // Función para manejar la creación o edición
   const handleSubmit = async (values) => {
+    
+
+    const formData = new FormData();
+    const e=0;
+
+    // Añadir campos al FormData
+    Object.keys(values).forEach((key) => {
+      if (key === 'font_file' || key === 'certificate_template') {
+        // Solo añadir los archivos si existen
+        if (values[key]) {
+          formData.append(key, values[key]);
+          console.log(key + ':', values[key]);
+        }
+      } else {
+        formData.append(key, values[key]);
+        console.log(key + ':', values[key]);
+      }
+    });
+
+  // Debug: Mostrar contenido del FormData
+  console.log("Contenido del formData luego de Iterar");
+  for (let pair of formData.entries()) {
+    console.log(pair[0] + ':', pair[1]);
+  }
+      
     setIsLoading(true);
+
     try {
       let response;
       if (id) {
@@ -254,6 +300,41 @@ const EventForm = () => {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <ErrorMessage name="address" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="font_file" className="block text-sm font-medium text-gray-700">Archivo de Fuente</label>
+              <input
+                name="font_file"
+                type="file"
+                accept=".ttf,.otf"
+                onChange={(event) => {
+                  
+                  const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
+                  setFieldValue("font_file", file);
+                  /* const file = event.currentTarget.files[0];
+                  console.log("Selected file font:", file); */
+                }}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="font_file" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="certificate_template" className="block text-sm font-medium text-gray-700">Plantilla de Certificado</label>
+              <input
+                name="certificate_template"
+                type="file"
+                accept="image/jpeg,image/png"
+                onChange={(event) => {
+                  const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
+                  setFieldValue("certificate_template", file);
+                  /* const file = event.currentTarget.files[0];
+                  console.log("Selected file image:", file); */
+                }}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="certificate_template" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
             <div className="flex justify space-x-4">

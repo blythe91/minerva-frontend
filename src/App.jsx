@@ -40,6 +40,8 @@ import StaffForm from './partials/staff/StaffForm';
 import ParticipantEventTable from './partials/participantEvent/ParticipantEventTable';
 import ParticipantEventDetail from './partials/participantEvent/ParticipantEventDetail';
 import ParticipantEventForm from './partials/participantEvent/ParticipantEventForm';
+import CSVImportPE from './partials/csvimportpe/CSVImportPE';
+import CertGen from './partials/certgen/CertGen';
 
 
 function App() {
@@ -87,6 +89,11 @@ function App() {
             <Route path="/participant-events/new" element={<ParticipantEventForm />} />
             <Route path="/participant-events/edit/:id" element={<ParticipantEventForm />} />
 
+              {/* Creación de Certificados individuales */}
+
+            <Route path="/certgen/:id" element={<CertGen />} />
+
+
               {/* parámetros del sistema */}
              <Route path="/event-roles" element={<EventRoleTable />} />
              <Route path="/event-roles/:id" element={<EventRoleDetail />} />
@@ -113,6 +120,12 @@ function App() {
              <Route path="/certificate-types/new" element={<CertificateTypeForm />} />
              <Route path="/certificate-types/edit/:id" element={<CertificateTypeForm />} />
              <Route path="/certificate-types/:id" element={<CertificateTypeDetail />} />
+
+
+
+
+             {/* Importar participantes a eventos por lotes */}
+             <Route path="/csv-import-pe" element={<CSVImportPE />} />
              
           </Route>
           <Route path="/empty" element={<UnderConstruction />} />

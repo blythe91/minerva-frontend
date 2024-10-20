@@ -40,9 +40,7 @@ const EventDetail = () => {
     const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este evento?');
     if (confirmDelete) {
       try {
-        console.log("entra al try-catch justo antes de la solicitud a la api");
         const response = await Api.delete(`/events/${event._id}`); // Ajusta el endpoint según sea necesario
-        console.log(response);
         if (response.statusCode === 200) {
           showAlertTopEnd('Éxito', 'Evento eliminado correctamente', 'success');
           navigate('/events'); // Redirigir a la lista de eventos
@@ -51,7 +49,6 @@ const EventDetail = () => {
         }
       } catch (error) {
         showAlertTopEnd('Error', 'Hubo un problema al eliminar el evento', 'error');
-        
       }
     }
   };
@@ -80,7 +77,7 @@ const EventDetail = () => {
         </div>
         <div>
           <p><strong>Coordinación:</strong> {event.coordination_name}</p>
-          <p><strong>Prefijo:</strong> {event.event_prefix}</p>
+          <p><strong>Prefijo:</strong> {event.event_prefix || 'No especificado'}</p>
         </div>
       </div>
 
@@ -90,8 +87,19 @@ const EventDetail = () => {
           <p><strong>Fecha de Fin:</strong> {new Date(event.end_date).toLocaleDateString()}</p>
         </div>
         <div>
-          <p><strong>Dirección:</strong> {event.address}</p>
+          <p><strong>Dirección:</strong> {event.address || 'No especificada'}</p>
         </div>
+      </div>
+
+      {/* Desplegar información de la fuente y la plantilla de certificado */}
+      <div className="mb-6">
+        <p><strong>Archivo de Fuente:</strong> {event.font_file_path ? event.font_file_path.split('/').pop() : 'No hay fuente cargada'}</p>
+        <p><strong>Plantilla de Certificado:</strong></p>
+        {event.certificate_template_path ? (
+          <img src={`${process.env.REACT_APP_API_URL}/storage/${event.certificate_template_path}`} alt="Plantilla de Certificado" className="w-full h-auto max-w-xs" />
+        ) : (
+          <p>No hay plantilla de certificado cargada</p>
+        )}
       </div>
 
       <div className="flex space-x-4 mb-4">
