@@ -58,7 +58,6 @@ const ParticipantDetail = () => {
   };
 
   return (
-    
     <div className="p-6 bg-white shadow-md rounded-lg">
       <div className="flex justify-end mb-4">
         <button
@@ -68,14 +67,10 @@ const ParticipantDetail = () => {
           Agregar Participante
         </button>
       </div>
-  
+
       <h2 className="text-3xl font-bold mb-4">{participant.pri_nom} {participant.seg_nom} {participant.pri_ape} {participant.seg_ape}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
-          {/* <p><strong>Primer Nombre:</strong> {participant.pri_nom}</p>
-          <p><strong>Segundo Nombre:</strong> {participant.seg_nom}</p>
-          <p><strong>Primer Apellido:</strong> {participant.pri_ape}</p>
-          <p><strong>Segundo Apellido:</strong> {participant.seg_ape}</p> */}
           <p><strong>Cédula:</strong> {participant.cedula}</p>
           <p><strong>Teléfono:</strong> {participant.celular}</p>
           <p><strong>Email:</strong> {participant.email}</p>
@@ -93,13 +88,12 @@ const ParticipantDetail = () => {
         </div>
         <div>
           <p><strong>Código Postal:</strong> {participant.codigo_postal}</p>
-          <p><strong>Grado de Instrucción:</strong> {participant.grado_instruccion}</p>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
-          <p><strong>Título:</strong> {participant.titulo}</p>
-          <p><strong>Universidad:</strong> {participant.universidad}</p>
+          <p><strong>Organización:</strong> {participant.organizacion}</p>
+          <p><strong>Cargo:</strong> {participant.cargo}</p>
         </div>
       </div>
       <div className="flex space-x-4 mb-4">
@@ -121,8 +115,6 @@ const ParticipantDetail = () => {
         >
           Eliminar
         </button>
-        
-        
       </div>
     </div>
   );

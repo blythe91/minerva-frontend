@@ -259,7 +259,7 @@ const EventForm = () => {
                   if (selectedCoordination) {
                     setFieldValue("coordination_name", selectedCoordination.name_coordination);
                   }
-                  setFieldValue("coordination_id", selectedId);
+                  setFieldValue("coordination_id", String(selectedId));
                 }}
               >
                 <option value="" label="Seleccione una coordinación" />
@@ -300,6 +300,17 @@ const EventForm = () => {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <ErrorMessage name="address" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="event_modality" className="block text-sm font-medium text-gray-700">Modalidad del Evento</label>
+              <Field
+                type="text"
+                name="event_modality"
+                id="event_modality"
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+              />
+              <ErrorMessage name="event_modality" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
             <div>

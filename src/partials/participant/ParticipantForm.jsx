@@ -10,7 +10,7 @@ const ParticipantForm = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Listas desplegables para países, grados de instrucción y títulos
+  // Listas desplegables para países
   const paises = [
     'Argentina', 'Bolivia', 'Brasil', 'Chile', 'Colombia', 'Costa Rica', 'Cuba', 
     'Ecuador', 'El Salvador', 'España', 'Estados Unidos', 'Guatemala', 'Honduras', 
@@ -22,49 +22,8 @@ const ParticipantForm = () => {
     'Dinamarca', 'Finlandia', 'Suiza', 'Polonia', 'Países Bajos'
   ];
 
-  const gradosInstruccion = [
-    'Primaria', 'Secundaria', 'Técnico Medio', 'Técnico Superior', 'Universitario',
-    'Maestría', 'Doctorado', 'Postdoctorado'
-  ];
-
-const titulos = [
-  // Ingeniería y Tecnología
-  'Ingeniero Civil', 'Ingeniero de Sistemas', 'Ingeniero en Informática', 'Ingeniero Eléctrico', 'Ingeniero Industrial', 'Ingeniero Electrónico', 'Ingeniero Mecánico', 'Ingeniero Químico', 'Ingeniero en Petróleo', 'Ingeniero en Telecomunicaciones', 'Ingeniero en Materiales', 'Ingeniero Agrónomo',
-
-  // Ciencias de la Salud
-  'Médico Cirujano', 'Odontólogo', 'Veterinario', 'Bioanalista', 'Enfermero', 
-  'Farmacéutico', 'Fisioterapeuta', 'Nutricionista', 'Técnico Radiólogo',
-
-  // Ciencias Sociales y Jurídicas
-  'Abogado', 'Sociólogo', 'Antropólogo', 'Trabajador Social', 'Criminólogo', 
-  'Politólogo', 'Relaciones Internacionales', 'Licenciado en Estudios Jurídicos',
-
-  // Ciencias Económicas y Administrativas
-  'Licenciado en Administración', 'Contador Público', 'Economista', 'Licenciado en Comercio Exterior', 
-  'Licenciado en Relaciones Industriales', 'Licenciado en Mercadeo', 'Licenciado en Finanzas',
-
-  // Ciencias Naturales y Exactas
-  'Biólogo', 'Químico', 'Físico', 'Matemático', 'Geólogo', 'Estadístico',
-
-  // Ciencias de la Educación
-  'Licenciado en Educación Preescolar', 'Licenciado en Educación Integral', 'Licenciado en Educación Física', 
-  'Licenciado en Educación Especial', 'Licenciado en Orientación Educativa',
-
-  // Humanidades y Artes
-  'Psicólogo', 'Periodista', 'Licenciado en Filosofía', 'Licenciado en Historia', 
-  'Licenciado en Letras', 'Licenciado en Idiomas Modernos', 'Licenciado en Artes Escénicas', 
-  'Licenciado en Música', 'Diseñador Gráfico', 'Licenciado en Comunicación Social',
-
-  // Arquitectura y Diseño
-  'Arquitecto', 'Diseñador Industrial', 'Urbanista', 'Ingeniero en Geodesia y Cartografía',
-
-  // Ciencias Agropecuarias
-  'Ingeniero Forestal', 'Zootecnista', 'Ingeniero en Recursos Naturales Renovables'
-];
-
-
   // Esquema de validación con Yup
-const validationSchema = Yup.object({
+  const validationSchema = Yup.object({
     pri_nom: Yup.string()
       .required('El primer nombre es requerido')
       .max(50, 'El primer nombre no puede exceder 50 caracteres'),
@@ -82,7 +41,6 @@ const validationSchema = Yup.object({
       .matches(/^[0-9]+$/, 'La cédula debe ser un número válido'),
     celular: Yup.string()
       .required('El celular es requerido')
-      //.matches(/^(0414|0424|0416|0426|0412)\d{7}$/, 'Debe ser un número de celular válido'), // Si quieres usar el regex para celulares específicos de Venezuela
       .matches(/^[0-9]+$/, 'Debe ser un número válido'),
     email: Yup.string()
       .email('Debe ser un email válido')
@@ -105,17 +63,13 @@ const validationSchema = Yup.object({
     codigo_postal: Yup.string()
       .required('El código postal es requerido')
       .matches(/^[0-9]+$/, 'Debe ser un código postal válido'),
-    grado_instruccion: Yup.string()
-      .required('El grado de instrucción es requerido')
-      .max(100, 'El grado de instrucción no puede exceder 100 caracteres'),
-    titulo: Yup.string()
-      .nullable()
-      .max(255, 'El título no puede exceder 255 caracteres'),
-    universidad: Yup.string()
-      .nullable()
-      .max(255, 'La universidad no puede exceder 255 caracteres'),
+    organizacion: Yup.string()
+      .required('La organización es requerida')
+      .max(255, 'La organización no puede exceder 255 caracteres'),
+    cargo: Yup.string()
+      .required('El cargo es requerido')
+      .max(255, 'El cargo no puede exceder 255 caracteres'),
   });
-  
 
   // Si hay un ID en la URL, cargamos los datos del participante para edición
   useEffect(() => {
@@ -150,13 +104,12 @@ const validationSchema = Yup.object({
     ciudad: '',
     direccion: '',
     codigo_postal: '',
-    grado_instruccion: '',
-    titulo: '',
-    universidad: '',
+    organizacion: '', // Nuevo campo
+    cargo: '', // Nuevo campo
   });
 
-// Función para manejar la creación o edición
-const handleSubmit = async (values) => {
+  // Función para manejar la creación o edición
+  const handleSubmit = async (values) => {
     setIsLoading(true);
   
     try {
@@ -190,7 +143,6 @@ const handleSubmit = async (values) => {
   
     setIsLoading(false);
   };
-  
 
   // Función para volver a la página anterior
   const handleBack = () => {
@@ -251,7 +203,7 @@ const handleSubmit = async (values) => {
                 <h3 className="text-2xl font-semibold mb-4">Información de Contacto</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                    <label className="block mb-2">Teléfono</label>
+                    <label className="block mb-2">Celular</label>
                     <Field 
                         name="celular" 
                         className="w-full p-2 border rounded" 
@@ -266,24 +218,24 @@ const handleSubmit = async (values) => {
                     <Field name="email" type="email" className="w-full p-2 border rounded" />
                     <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
                     </div>
-                </div>
-                </div>
-
-                {/* Información de Ubicación */}
-                <div className="mb-6">
-                <h3 className="text-2xl font-semibold mb-4">Información de Ubicación</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                     <label className="block mb-2">Nacionalidad</label>
                     <Field name="nacionalidad" className="w-full p-2 border rounded" />
                     <ErrorMessage name="nacionalidad" component="div" className="text-red-500 text-sm" />
                     </div>
+                </div>
+                </div>
+
+                {/* Domicilio */}
+                <div className="mb-6">
+                <h3 className="text-2xl font-semibold mb-4">Domicilio</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                     <label className="block mb-2">País</label>
                     <Field as="select" name="pais" className="w-full p-2 border rounded">
-                        <option value="">Selecciona un país</option>
-                        {paises.map((pais) => (
-                        <option key={pais} value={pais}>{pais}</option>
+                        <option value="">Seleccione un país</option>
+                        {paises.map((pais, index) => (
+                        <option key={index} value={pais}>{pais}</option>
                         ))}
                     </Field>
                     <ErrorMessage name="pais" component="div" className="text-red-500 text-sm" />
@@ -291,14 +243,17 @@ const handleSubmit = async (values) => {
                     <div>
                     <label className="block mb-2">Estado</label>
                     <Field name="estado" className="w-full p-2 border rounded" />
+                    <ErrorMessage name="estado" component="div" className="text-red-500 text-sm" />
                     </div>
                     <div>
                     <label className="block mb-2">Ciudad</label>
                     <Field name="ciudad" className="w-full p-2 border rounded" />
+                    <ErrorMessage name="ciudad" component="div" className="text-red-500 text-sm" />
                     </div>
                     <div>
                     <label className="block mb-2">Dirección</label>
                     <Field name="direccion" className="w-full p-2 border rounded" />
+                    <ErrorMessage name="direccion" component="div" className="text-red-500 text-sm" />
                     </div>
                     <div>
                     <label className="block mb-2">Código Postal</label>
@@ -314,52 +269,32 @@ const handleSubmit = async (values) => {
                 </div>
                 </div>
 
-                {/* Información Académica */}
+                {/* Información Adicional */}
                 <div className="mb-6">
-                <h3 className="text-2xl font-semibold mb-4">Información Académica</h3>
+                <h3 className="text-2xl font-semibold mb-4">Información Adicional</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                    <label className="block mb-2">Grado de Instrucción</label>
-                    <Field as="select" name="grado_instruccion" className="w-full p-2 border rounded">
-                        <option value="">Selecciona un grado</option>
-                        {gradosInstruccion.map((grado) => (
-                        <option key={grado} value={grado}>{grado}</option>
-                        ))}
-                    </Field>
-                    <ErrorMessage name="grado_instruccion" component="div" className="text-red-500 text-sm" />
+                    <label className="block mb-2">Organización</label>
+                    <Field name="organizacion" className="w-full p-2 border rounded" />
+                    <ErrorMessage name="organizacion" component="div" className="text-red-500 text-sm" />
                     </div>
                     <div>
-                    <label className="block mb-2">Título</label>
-                    <Field as="select" name="titulo" className="w-full p-2 border rounded">
-                        <option value="">Selecciona un título</option>
-                        {titulos.sort().map((titulo) => (
-                        <option key={titulo} value={titulo}>{titulo}</option>
-                        ))}
-                    </Field>
-                    <ErrorMessage name="titulo" component="div" className="text-red-500 text-sm" />
-                    </div>
-                    <div>
-                    <label className="block mb-2">Universidad</label>
-                    <Field name="universidad" className="w-full p-2 border rounded" />
+                    <label className="block mb-2">Cargo</label>
+                    <Field name="cargo" className="w-full p-2 border rounded" />
+                    <ErrorMessage name="cargo" component="div" className="text-red-500 text-sm" />
                     </div>
                 </div>
                 </div>
 
-                {/* Botones */}
-                <div className="flex justify space-x-4">
-                  <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:blue-offset-2 focus:ring-blue-500">
-                      {id ? 'Actualizar' : 'Agregar'} Participante
-                  </button>
-                  <button type="button" onClick={handleBack} className="px-4 py-2 bg-gray-400 
-                  text-white rounded hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                      Volver
-                  </button>  
+                {/* Botones de acción */}
+                <div className="flex justify-between">
+                <button type="button" className="bg-gray-500 text-white p-2 rounded" onClick={handleBack}>Volver</button>
+                <button type="submit" className="bg-blue-500 text-white p-2 rounded">{id ? 'Actualizar' : 'Agregar'}</button>
                 </div>
             </Form>
             </Formik>
         )}
     </div>
-
   );
 };
 

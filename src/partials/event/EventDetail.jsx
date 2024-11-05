@@ -74,6 +74,7 @@ const EventDetail = () => {
           <p><strong>Nombre del Evento:</strong> {event.name_event}</p>
           <p><strong>Horas Académicas:</strong> {event.academic_hours}</p>
           <p><strong>Tipo de Evento:</strong> {event.event_type_name}</p>
+          <p><strong>Modalidad del Evento:</strong> {event.event_modality || 'No especificada'}</p> {/* Nueva línea añadida */}
         </div>
         <div>
           <p><strong>Coordinación:</strong> {event.coordination_name}</p>
