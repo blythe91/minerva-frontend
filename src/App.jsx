@@ -42,6 +42,9 @@ import ParticipantEventDetail from './partials/participantEvent/ParticipantEvent
 import ParticipantEventForm from './partials/participantEvent/ParticipantEventForm';
 import CSVImportPE from './partials/csvimportpe/CSVImportPE';
 import CertGen from './partials/certgen/CertGen';
+import IdCertControlTable from './partials/params/idCertControl/IdCertControlTable';
+import IdCertControlDetail from './partials/params/idCertControl/IdCertControlDetail';
+import IdCertControlForm from './partials/params/idCertControl/IdCertControlForm';
 
 
 function App() {
@@ -120,6 +123,11 @@ function App() {
              <Route path="/certificate-types/new" element={<CertificateTypeForm />} />
              <Route path="/certificate-types/edit/:id" element={<CertificateTypeForm />} />
              <Route path="/certificate-types/:id" element={<CertificateTypeDetail />} />
+
+             <Route path="/id-cert-controls" element={<IdCertControlTable />} />
+             <Route path="/id-cert-controls/:id" element={<IdCertControlDetail />} />
+             <Route path="/id-cert-controls/new" element={<IdCertControlForm />} />
+             <Route path="/id-cert-controls/edit/:id" element={<IdCertControlForm />} />
 
 
 
