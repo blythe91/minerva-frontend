@@ -41,7 +41,6 @@ const ParticipantTable = () => {
       item.cedula,
       item.celular,
       item.email,
-      item.grado_instruccion,
     ];
 
     return valuesToFilter.some(value =>
@@ -78,10 +77,6 @@ const ParticipantTable = () => {
       name: 'Email',
       selector: row => row.email,
       sortable: true,
-    },
-    {
-      name: 'Grado de Instrucción',
-      selector: row => row.grado_instruccion,
     },
   ];
 
