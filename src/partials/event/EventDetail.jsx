@@ -88,6 +88,7 @@ const EventDetail = () => {
           <p><strong>Fecha de Fin:</strong> {new Date(event.end_date).toLocaleDateString()}</p>
         </div>
         <div>
+          <p><strong>Texto de linea de fecha [Certificado]:</strong> {event.date_line_text || 'No especificada'}</p>
           <p><strong>Dirección:</strong> {event.address || 'No especificada'}</p>
         </div>
       </div>

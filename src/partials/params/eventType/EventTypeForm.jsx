@@ -10,16 +10,20 @@ const EventTypeForm = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Esquema de validación con Yup, basado en el modelo de validación de backend
+  // Esquema de validación con Yup, incluyendo el campo 'abrev'
   const validationSchema = Yup.object({
     name_event_type: Yup.string()
       .required('El nombre del tipo de evento es obligatorio.')
       .max(255, 'El nombre del tipo de evento no debe exceder los 255 caracteres.'),
+    abrev: Yup.string()
+      .required('La abreviatura es obligatoria.')
+      .max(10, 'La abreviatura no debe exceder los 10 caracteres.'),
   });
 
   // Valores iniciales del formulario
   const [initialValues, setInitialValues] = useState({
     name_event_type: '',
+    abrev: '', // Nuevo campo añadido
   });
 
   // Fetch de los tipos de eventos al cargar el componente, si existe ID
@@ -57,7 +61,7 @@ const EventTypeForm = () => {
         showAlertTopEnd('Éxito', id ? 'Tipo de evento actualizado correctamente' : 'Tipo de evento agregado correctamente', 'success');
         navigate('/event-types');
       } else if (response.statusCode === 422 && response.data.errors) {
-        // Manejar errores de validación del backend (código 400)
+        // Manejar errores de validación del backend
         Object.keys(response.data.errors).forEach((field) => {
           const errorMsg = response.data.errors[field].join(' ');
           showAlert('Error', `${field}: ${errorMsg}`, 'error');
@@ -99,10 +103,20 @@ const EventTypeForm = () => {
               <ErrorMessage name="name_event_type" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
+            <div>
+              <label htmlFor="abrev" className="block text-sm font-medium text-gray-700">Abreviatura</label>
+              <Field
+                name="abrev"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="abrev" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
             <div className="flex justify-between space-x-4">
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:blue-offset-2 focus:ring-blue-500"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 disabled={isLoading}
               >
                 {isLoading ? 'Guardando...' : id ? 'Actualizar Tipo de Evento' : 'Crear Tipo de Evento'}

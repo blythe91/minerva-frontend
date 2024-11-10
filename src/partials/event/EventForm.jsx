@@ -9,10 +9,26 @@ const EventForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [eventTypes, setEventTypes] = useState([]); // Estado para tipos de evento
-  const [coordinations, setCoordinations] = useState([]); // Estado para coordinaciones
+  const [eventTypes, setEventTypes] = useState([]);
+  const [coordinations, setCoordinations] = useState([]);
+  
+  const [eventPrefix, setEventPrefix] = useState({
+    coordinationID: '',
+    currentYear: new Date().getFullYear(),
+    eventTypeAbrev: ''
+  });
 
-  // Esquema de validación con Yup
+  const updateEventPrefix = (field, value) => {
+    setEventPrefix(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const generateEventPrefix = () => {
+    return `${eventPrefix.coordinationID}-${eventPrefix.currentYear}-${eventPrefix.eventTypeAbrev}`;
+  };
+
   const validationSchema = Yup.object({
     name_event: Yup.string()
       .required('El nombre del evento es requerido')
@@ -34,14 +50,15 @@ const EventForm = () => {
       .required('El nombre de la coordinación es requerido')
       .max(255, 'El nombre de la coordinación no puede exceder 255 caracteres'),
     start_date: Yup.date()
-      .required('La fecha de inicio es requerida')
-      .min(new Date(), 'La fecha de inicio debe ser igual o posterior a hoy'),
+      .required('La fecha de inicio es requerida'),
     end_date: Yup.date()
-      .required('La fecha de finalización es requerida')
-      .min(Yup.ref('start_date'), 'La fecha de finalización debe ser posterior a la fecha de inicio'),
+      .required('La fecha de finalización es requerida'),
     address: Yup.string()
       .nullable()
       .max(255, 'La dirección no puede exceder 255 caracteres'),
+    date_line_text: Yup.string()
+      .nullable()
+      .max(255, 'El texto de la línea de fecha no puede exceder 255 caracteres'),
     font_file: Yup.mixed()
       .nullable()
       .test('fileType', 'El archivo debe ser un archivo de fuente (ttf, otf)', (value) => {
@@ -64,10 +81,9 @@ const EventForm = () => {
       }),
   });
 
-  // Fetch de tipos de evento y coordinaciones al cargar el componente
   useEffect(() => {
     const fetchEventTypes = async () => {
-      const response = await Api.get('/event-types'); // Ajusta la ruta según tu API
+      const response = await Api.get('/event-types');
       if (response.statusCode === 200) {
         setEventTypes(response.data);
       } else {
@@ -76,7 +92,7 @@ const EventForm = () => {
     };
 
     const fetchCoordinations = async () => {
-      const response = await Api.get('/coordinations'); // Ajusta la ruta según tu API
+      const response = await Api.get('/coordinations');
       if (response.statusCode === 200) {
         setCoordinations(response.data);
       } else {
@@ -103,21 +119,22 @@ const EventForm = () => {
     }
   }, [id]);
 
-  // Valores iniciales del formulario
   const [initialValues, setInitialValues] = useState({
     name_event: '',
     academic_hours: '',
     event_type_id: '',
     event_type_name: '',
-    event_prefix: '',
+    event_prefix: generateEventPrefix(),
     coordination_id: '',
     coordination_name: '',
     start_date: '',
     end_date: '',
     address: '',
+    date_line_text: '',
+    font_file_path: '',
+    certificate_template_path: '',
   });
 
-  // Función para manejar la creación o edición
   const handleSubmit = async (values) => {
     
 
@@ -175,10 +192,10 @@ const EventForm = () => {
     setIsLoading(false);
   };
 
-  // Función para volver a la página anterior
   const handleBack = () => {
     navigate(-1);
   };
+
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
@@ -213,18 +230,65 @@ const EventForm = () => {
             </div>
 
             <div>
+              <label htmlFor="coordination_id" className="block text-sm font-medium text-gray-700">Coordinación</label>
+              <Field
+                as="select"
+                name="coordination_id"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  const selectedCoordination = coordinations.find(
+                    (coord) => coord._id === selectedId
+                  );
+
+                  if (selectedCoordination) {
+                    setFieldValue("coordination_name", selectedCoordination.name_coordination);
+                    setFieldValue("coordination_id", String(selectedId));
+
+                    // Actualizar `coordinationID` en el estado de `eventPrefix`
+                    updateEventPrefix("coordinationID", selectedId);
+
+                    // Establecer el valor del prefijo de evento
+                    const newPrefix = generateEventPrefix();
+                    setFieldValue("event_prefix", newPrefix);
+                    console.log(`Nuevo Prefijo: ${newPrefix}`);
+                  }
+                }}
+              >
+                <option value="" label="Seleccione una coordinación" />
+                {coordinations.map((coord) => (
+                  <option key={coord._id} value={coord._id}>
+                    {coord.name_coordination}
+                  </option>
+                ))}
+              </Field>
+
+              <ErrorMessage name="coordination_id" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+            <div>
               <label htmlFor="event_type_id" className="block text-sm font-medium text-gray-700">Tipo de Evento</label>
               <Field
                 as="select"
                 name="event_type_id"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                onChange={ (e) => {
+                onChange={(e) => {
                   const selectedId = e.target.value;
-                  const selectedType = eventTypes.find(type => type._id === selectedId);
+                  const selectedType = eventTypes.find(
+                    (type) => type._id === selectedId
+                  );
+  
                   if (selectedType) {
                     setFieldValue("event_type_name", selectedType.name_event_type);
+                    setFieldValue("event_type_id", selectedId);
+  
+                    // Actualizar `eventTypeAbrev` en el estado de `eventPrefix`
+                    updateEventPrefix("eventTypeAbrev", selectedType.abrev);
+  
+                    // Establecer el valor del prefijo de evento
+                    const newPrefix = generateEventPrefix();
+                    setFieldValue("event_prefix", newPrefix);
+                    console.log(`Nuevo Prefijo: ${newPrefix}`);
                   }
-                  setFieldValue("event_type_id", selectedId);
                 }}
               >
                 <option value="" label="Seleccione un tipo de evento" />
@@ -238,39 +302,18 @@ const EventForm = () => {
             </div>
 
             <div>
-              <label htmlFor="event_prefix" className="block text-sm font-medium text-gray-700">Prefijo del Evento (opcional)</label>
+              <label htmlFor="event_prefix" className="block text-sm font-medium text-gray-700">Prefijo del Evento</label>
               <Field
                 name="event_prefix"
                 type="text"
+                readOnly
+                value={generateEventPrefix()}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <ErrorMessage name="event_prefix" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
-            <div>
-              <label htmlFor="coordination_id" className="block text-sm font-medium text-gray-700">Coordinación</label>
-              <Field
-                as="select"
-                name="coordination_id"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                onChange={ (e) => {
-                  const selectedId = e.target.value;
-                  const selectedCoordination = coordinations.find(coord => coord._id === selectedId);
-                  if (selectedCoordination) {
-                    setFieldValue("coordination_name", selectedCoordination.name_coordination);
-                  }
-                  setFieldValue("coordination_id", String(selectedId));
-                }}
-              >
-                <option value="" label="Seleccione una coordinación" />
-                {coordinations.map((coord) => (
-                  <option key={coord._id} value={coord._id}>
-                    {coord.name_coordination}
-                  </option>
-                ))}
-              </Field>
-              <ErrorMessage name="coordination_id" component="div" className="text-red-600 text-sm mt-1" />
-            </div>
+
 
             <div>
               <label htmlFor="start_date" className="block text-sm font-medium text-gray-700">Fecha de Inicio</label>
@@ -303,15 +346,42 @@ const EventForm = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="event_modality" className="block text-sm font-medium text-gray-700">Modalidad del Evento</label>
-              <Field
-                type="text"
-                name="event_modality"
-                id="event_modality"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              />
+              <label htmlFor="event_modality" className="block text-sm font-medium text-gray-700">
+                Modalidad del Evento
+              </label>
+              <div className="flex items-center space-x-4 mt-2">
+                <Field
+                  type="radio"
+                  name="event_modality"
+                  value="Presencial"
+                  id="modality_presencial"
+                  className="mr-2"
+                />
+                <label htmlFor="modality_presencial" className="text-gray-700">Presencial</label>
+
+                <Field
+                  type="radio"
+                  name="event_modality"
+                  value="Online"
+                  id="modality_online"
+                  className="mr-2"
+                />
+                <label htmlFor="modality_online" className="text-gray-700">Online</label>
+              </div>
               <ErrorMessage name="event_modality" component="div" className="text-red-600 text-sm mt-1" />
             </div>
+            <div>
+              <label htmlFor="date_line_text" className="block text-sm font-medium text-gray-700">
+                Texto de la línea de fecha (opcional)
+              </label>
+              <Field
+                name="date_line_text"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="date_line_text" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
 
             <div>
               <label htmlFor="font_file" className="block text-sm font-medium text-gray-700">Archivo de Fuente</label>

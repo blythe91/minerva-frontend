@@ -37,6 +37,7 @@ const EventTypeTable = () => {
   const filteredItems = eventTypes.filter(item => {
     const valuesToFilter = [
       item.name_event_type,
+      item.abrev, // Filtrando también por el campo 'abrev'
     ];
 
     return valuesToFilter.some(value =>
@@ -49,6 +50,11 @@ const EventTypeTable = () => {
     {
       name: 'ID',
       selector: row => row._id,
+      sortable: true,
+    },
+    {
+      name: 'Abreviatura',
+      selector: row => row.abrev,
       sortable: true,
     },
     {

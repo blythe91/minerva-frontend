@@ -72,6 +72,7 @@ const EventTypeDetail = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
           <p><strong>Nombre del Tipo de Evento:</strong> {eventType.name_event_type}</p>
+          <p><strong>Abreviatura:</strong> {eventType.abrev || 'N/A'}</p> {/* Campo añadido */}
           <p><strong>Creado en:</strong> {new Date(eventType.created_at).toLocaleDateString()}</p>
           <p><strong>Actualizado en:</strong> {new Date(eventType.updated_at).toLocaleDateString()}</p>
         </div>
