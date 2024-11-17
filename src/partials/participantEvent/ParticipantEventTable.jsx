@@ -164,10 +164,25 @@ const ParticipantEventTable = () => {
     },
   ];
 
+  const handleUpdateFields = () => {
+    navigate('/update-fields'); // Redirecciona al componente UpdateFields
+  };
+
   return (
     <div className="p-6 bg-white shadow-md rounded-lg">
+      <div className="flex justify-end mb-4">
+          <button
+            onClick={handleUpdateFields}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Actualizar Campos de Participantes
+          </button>
+        </div>
       <div className="flex justify-between items-center mb-4">
+
+        
         <h2 className="text-2xl font-bold">Lista de Participantes en Eventos</h2>
+
         <button
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           onClick={handleAddParticipantEvent} // Llama al manejador para agregar un nuevo participante en evento

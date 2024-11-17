@@ -45,6 +45,9 @@ import CertGen from './partials/certgen/CertGen';
 import IdCertControlTable from './partials/params/idCertControl/IdCertControlTable';
 import IdCertControlDetail from './partials/params/idCertControl/IdCertControlDetail';
 import IdCertControlForm from './partials/params/idCertControl/IdCertControlForm';
+import UpdateFields from './partials/participantEvent/updateFields';
+import EventCertificates from './partials/event/EventCertificates';
+import CertGenAll from './partials/certgen/CertGenAll';
 
 
 function App() {
@@ -79,6 +82,8 @@ function App() {
             <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/events/edit/:id" element={<EventForm />} />
             <Route path="/events/new" element={<EventForm />} />
+            <Route path="/events/:id/certificates" element={<EventCertificates />} />
+            <Route path="/certgen-all/:id" element={<CertGenAll />} />
 
 
             <Route path="/staff" element={<StaffTable />} />
@@ -91,6 +96,8 @@ function App() {
             <Route path="/participant-events/:id" element={<ParticipantEventDetail />} />
             <Route path="/participant-events/new" element={<ParticipantEventForm />} />
             <Route path="/participant-events/edit/:id" element={<ParticipantEventForm />} />
+
+            <Route path="/update-fields" element={<UpdateFields />} />
 
               {/* Creación de Certificados individuales */}
 

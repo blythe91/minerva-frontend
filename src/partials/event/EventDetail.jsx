@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { showAlertTopEnd } from '../../components/utils/Alert'; //alertas
 import { Api } from '../../services/Api'; //conexión a la API
 import { useParams, useNavigate } from 'react-router-dom';
+import { FaFilePdf } from 'react-icons/fa';
 
 const EventDetail = () => {
   const { id } = useParams(); // Obtiene el ID del evento desde la URL
@@ -52,6 +53,10 @@ const EventDetail = () => {
       }
     }
   };
+  const handleGenerateCertificate = () => {
+    
+    navigate(`/events/${id}/certificates/`);
+  };
 
   const handleBack = () => {
     navigate(-1); // Vuelve a la página anterior
@@ -59,14 +64,22 @@ const EventDetail = () => {
 
   return (
     <div className="p-6 bg-white shadow-md rounded-lg">
-      <div className="flex justify-end mb-4">
+      
+      <div className="flex justify-between items-center mb-4">
+        <button
+          className="flex items-center space-x-2 text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded" onClick={handleGenerateCertificate}>
+          <FaFilePdf className="text-white" />
+          <span>Generar Certificados del Evento</span>
+        </button>
+
         <button
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          onClick={() => navigate('/events/new')} // Redirige a la ruta de agregar evento
+          onClick={() => navigate('/events/new')}
         >
           Agregar Evento
         </button>
-      </div>
+      </div> 
+
 
       <h2 className="text-3xl font-bold mb-4">{event.name_event}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
