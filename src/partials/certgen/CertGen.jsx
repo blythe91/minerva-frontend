@@ -22,6 +22,10 @@ Font.register({
   src: '/fonts/Roboto-BoldCondensed.ttf', // Reemplaza con la ruta correcta de tu archivo de fuente
 });
 
+Font.register({
+  family: 'GreatVibes',
+  src: '/fonts/GreatVibes-Regular.ttf',
+});
 const styles = StyleSheet.create({
   page: {
     backgroundColor: '#ffffff',
@@ -78,8 +82,8 @@ const styles = StyleSheet.create({
     width: '100%',  // Asegura que ocupe todo el ancho disponible
   },
   participantName: {
-    fontSize: 28,
-    fontStyle: 'italic',
+    fontSize: 40,
+    fontFamily: 'GreatVibes',
     color: '#996515', // Dorado
     textAlign: 'center',
     marginBottom: 10,
@@ -96,13 +100,14 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   eventName: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     fontFamily: 'Roboto',
     color: '#5db6fa', // Azul claro
     textAlign: 'center',
     marginBottom: 10,
     width: '100%',  // Asegura que ocupe todo el ancho disponible
+    textTransform: 'uppercase',
   },
   modalityAndDuration: {
     fontSize: 12,
@@ -111,6 +116,7 @@ const styles = StyleSheet.create({
     color: '#050a30', // Azul oscuro
     textAlign: 'center',
     width: '100%',  // Asegura que ocupe todo el ancho disponible
+    textTransform: 'uppercase',
   },
   dateLineText: {
     fontSize: 12,
@@ -223,12 +229,12 @@ const CertGen = () => {
             {participantEvent.name_event}
           </Text>
 
-          <Text style={styles.preambleEventName}>
+          {/* <Text style={styles.preambleEventName}>
             facilitador: "acá va un nombre"
-          </Text>
+          </Text> */}
           
           <Text style={styles.modalityAndDuration}>
-            Modalidad: {eventDetails?.event_modality}
+            MODALIDAD: {eventDetails?.event_modality}
           </Text>
           <Text style={styles.modalityAndDuration}>
             Duración: {eventDetails?.academic_hours} horas académicas
@@ -256,7 +262,7 @@ const CertGen = () => {
         {/* Footer */}
         {/* <Text style={styles.footer}>Generado el {new Date().toLocaleDateString()}</Text> */}
 
-        <Text style={styles.footer}>{formattedDate}</Text>
+        {/* <Text style={styles.footer}>{formattedDate}</Text> */}
         <Text style={styles.eventPrefix}>
             {eventDetails.event_prefix || ''}
           </Text>
