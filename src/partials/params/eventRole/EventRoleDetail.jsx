@@ -15,7 +15,7 @@ const EventRoleDetail = () => {
       if (response.statusCode === 200) {
         setRole(response.data);
       } else {
-        showAlertTopEnd('Error', 'No se pudo cargar la información del rol', 'error');
+        showAlert('Error', 'No se pudo cargar la información del rol', 'error');
       }
       setIsLoading(false);
     };
@@ -42,13 +42,13 @@ const EventRoleDetail = () => {
       try {
         const response = await Api.delete(`/event-roles/${role._id}`); // Ajusta el endpoint según sea necesario
         if (response.statusCode === 200) {
-          showAlertTopEnd('Éxito', 'Rol eliminado correctamente', 'success');
+          showAlert('Éxito', 'Rol eliminado correctamente', 'success');
           navigate('/event-roles'); // Redirigir a la lista de roles
         } else {
-          showAlertTopEnd('Error', 'No se pudo eliminar el rol', 'error');
+          showAlert('Error', 'No se pudo eliminar el rol', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al eliminar el rol', 'error');
+        showAlert('Error', 'Hubo un problema al eliminar el rol', 'error');
       }
     }
   };

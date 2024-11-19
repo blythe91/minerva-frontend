@@ -71,7 +71,7 @@ const EventForm = () => {
           setInitialValues(response.data);
           updatePrefixFromInitialValues(response.data); // Actualiza el prefijo al cargar el evento
         } else {
-          showAlertTopEnd('Error', 'No se pudo cargar la información del evento', 'error');
+          showAlert('Error', 'No se pudo cargar la información del evento', 'error');
         }
         setIsLoading(false);
       };
@@ -244,7 +244,7 @@ const EventForm = () => {
       }
 
       if (response.statusCode === 200 || response.statusCode === 201) {
-        showAlertTopEnd('Éxito', id ? 'Evento actualizado correctamente' : 'Evento agregado correctamente', 'success');
+        showAlert('Éxito', id ? 'Evento actualizado correctamente' : 'Evento agregado correctamente', 'success');
         navigate('/events');
       } else if (response.statusCode === 422 && response.data.errors) {
         Object.entries(response.data.errors).forEach(([field, messages]) => {

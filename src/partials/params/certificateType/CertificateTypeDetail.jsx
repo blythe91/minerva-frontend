@@ -15,7 +15,7 @@ const CertificateTypeDetail = () => {
       if (response.statusCode === 200) {
         setCertificateType(response.data);
       } else {
-        showAlertTopEnd('Error', 'No se pudo cargar la información del tipo de certificado', 'error');
+        showAlert('Error', 'No se pudo cargar la información del tipo de certificado', 'error');
       }
       setIsLoading(false);
     };
@@ -42,13 +42,13 @@ const CertificateTypeDetail = () => {
       try {
         const response = await Api.delete(`/certificate-types/${certificateType._id}`); // Ajusta el endpoint según sea necesario
         if (response.statusCode === 200) {
-          showAlertTopEnd('Éxito', 'Tipo de certificado eliminado correctamente', 'success');
+          showAlert('Éxito', 'Tipo de certificado eliminado correctamente', 'success');
           navigate('/certificate-types'); // Redirigir a la lista de tipos de certificados
         } else {
-          showAlertTopEnd('Error', 'No se pudo eliminar el tipo de certificado', 'error');
+          showAlert('Error', 'No se pudo eliminar el tipo de certificado', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al eliminar el tipo de certificado', 'error');
+        showAlert('Error', 'Hubo un problema al eliminar el tipo de certificado', 'error');
       }
     }
   };

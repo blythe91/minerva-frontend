@@ -15,7 +15,7 @@ const StaffDetail = () => {
       if (response.statusCode === 200) {
         setStaff(response.data);
       } else {
-        showAlertTopEnd('Error', 'No se pudo cargar la información del personal', 'error');
+        showAlert('Error', 'No se pudo cargar la información del personal', 'error');
       }
       setIsLoading(false);
     };
@@ -42,13 +42,13 @@ const StaffDetail = () => {
       try {
         const response = await Api.delete(`/staff/${staff._id}`); // Ajusta el endpoint según sea necesario
         if (response.statusCode === 200) {
-          showAlertTopEnd('Éxito', 'Personal eliminado correctamente', 'success');
+          showAlert('Éxito', 'Personal eliminado correctamente', 'success');
           navigate('/staff'); // Redirige a la lista de personal
         } else {
-          showAlertTopEnd('Error', 'No se pudo eliminar el personal', 'error');
+          showAlert('Error', 'No se pudo eliminar el personal', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al eliminar el personal', 'error');
+        showAlert('Error', 'Hubo un problema al eliminar el personal', 'error');
       }
     }
   };

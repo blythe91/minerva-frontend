@@ -52,7 +52,7 @@ const ParticipantEventForm = () => {
           setParticipantEvent(data);
         }
       } catch (error) {
-        showAlertTopEnd("Error", "Hubo un problema al cargar los datos", "error");
+        showAlert("Error", "Hubo un problema al cargar los datos", "error");
       }
     };
 
@@ -146,7 +146,7 @@ const ParticipantEventForm = () => {
             }
 
             if (response.statusCode === 200 || response.statusCode === 201) {
-                showAlertTopEnd("Éxito", id ? "Registro actualizado correctamente" : "Registro creado correctamente", "success");
+                showAlert("Éxito", id ? "Registro actualizado correctamente" : "Registro creado correctamente", "success");
                 navigate("/participant-events");
             } else if (response.statusCode === 422 && response.data.errors) {
                 // Manejar errores de validación
@@ -159,7 +159,7 @@ const ParticipantEventForm = () => {
                 showAlert("Error", response.data.error + ` (${response.statusCode})`, "error");
             }
         } catch (error) {
-            showAlertTopEnd("Error", "Hubo un problema al guardar el registro", "error");
+            showAlert("Error", "Hubo un problema al guardar el registro", "error");
             console.error(error);
         }
 

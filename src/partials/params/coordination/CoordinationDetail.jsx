@@ -15,7 +15,7 @@ const CoordinationDetail = () => {
       if (response.statusCode === 200) {
         setCoordination(response.data);
       } else {
-        showAlertTopEnd('Error', 'No se pudo cargar la información de la coordinación', 'error');
+        showAlert('Error', 'No se pudo cargar la información de la coordinación', 'error');
       }
       setIsLoading(false);
     };
@@ -42,13 +42,13 @@ const CoordinationDetail = () => {
       try {
         const response = await Api.delete(`/coordinations/${coordination._id}`); // Ajusta el endpoint según sea necesario
         if (response.statusCode === 200) {
-          showAlertTopEnd('Éxito', 'Coordinación eliminada correctamente', 'success');
+          showAlert('Éxito', 'Coordinación eliminada correctamente', 'success');
           navigate('/coordinations'); // Redirigir a la lista de coordinaciones
         } else {
-          showAlertTopEnd('Error', 'No se pudo eliminar la coordinación', 'error');
+          showAlert('Error', 'No se pudo eliminar la coordinación', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al eliminar la coordinación', 'error');
+        showAlert('Error', 'Hubo un problema al eliminar la coordinación', 'error');
       }
     }
   };

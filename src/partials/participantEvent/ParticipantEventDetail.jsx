@@ -17,10 +17,10 @@ const ParticipantEventDetail = () => {
         if (response.statusCode === 200) {
           setParticipantEvent(response.data);
         } else {
-          showAlertTopEnd('Error', 'No se pudo cargar la información del evento del participante', 'error');
+          showAlert('Error', 'No se pudo cargar la información del evento del participante', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema con la conexión', 'error');
+        showAlert('Error', 'Hubo un problema con la conexión', 'error');
       }
       setIsLoading(false);
     };
@@ -46,13 +46,13 @@ const ParticipantEventDetail = () => {
       try {
         const response = await Api.delete(`/participant-events/${participantEvent._id}`); // Ajusta el endpoint según sea necesario
         if (response.statusCode === 200) {
-          showAlertTopEnd('Éxito', 'Registro eliminado correctamente', 'success');
+          showAlert('Éxito', 'Registro eliminado correctamente', 'success');
           navigate('/participant-events'); // Redirigir a la lista de eventos del participante
         } else {
-          showAlertTopEnd('Error', 'No se pudo eliminar el registro', 'error');
+          showAlert('Error', 'No se pudo eliminar el registro', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al eliminar el registro', 'error');
+        showAlert('Error', 'Hubo un problema al eliminar el registro', 'error');
       }
     }
   };
@@ -63,7 +63,7 @@ const ParticipantEventDetail = () => {
 
   const handleDownloadCertificate = () => {
     // Lógica para descargar el certificado
-    /* showAlertTopEnd('Descarga', 'Iniciando la descarga del certificado...', 'info'); */
+    /* showAlert('Descarga', 'Iniciando la descarga del certificado...', 'info'); */
     navigate(`/certgen/${participantEvent._id}`);
   };
   

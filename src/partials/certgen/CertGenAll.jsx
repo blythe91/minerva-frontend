@@ -3,7 +3,6 @@ import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, Image, pdf } f
 import { Api } from '../../services/Api';
 import { showAlertTopEnd, showAlert } from '../../components/utils/Alert'; // alertas
 import { useNavigate, useParams } from 'react-router-dom';
-const navigate = useNavigate();
 import { saveAs } from 'file-saver';
 import CertificateDocument from './CertificateDocument';
 
@@ -14,6 +13,7 @@ const CertGenAll = () => {
   const [eventDetails, setEventDetails] = useState(null);
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Fetch de los participantes y detalles del evento (sin asincronía)
   const fetchData = () => {

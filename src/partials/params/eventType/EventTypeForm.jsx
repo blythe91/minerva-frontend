@@ -35,7 +35,7 @@ const EventTypeForm = () => {
         if (response.statusCode === 200) {
           setInitialValues(response.data);
         } else {
-          showAlertTopEnd('Error', 'No se pudo cargar la información del tipo de evento', 'error');
+          showAlert('Error', 'No se pudo cargar la información del tipo de evento', 'error');
         }
         setIsLoading(false);
       };
@@ -58,7 +58,7 @@ const EventTypeForm = () => {
       }
 
       if (response.statusCode === 200 || response.statusCode === 201) {
-        showAlertTopEnd('Éxito', id ? 'Tipo de evento actualizado correctamente' : 'Tipo de evento agregado correctamente', 'success');
+        showAlert('Éxito', id ? 'Tipo de evento actualizado correctamente' : 'Tipo de evento agregado correctamente', 'success');
         navigate('/event-types');
       } else if (response.statusCode === 422 && response.data.errors) {
         // Manejar errores de validación del backend

@@ -16,10 +16,10 @@ const IdCertControlDetail = () => {
         if (response.statusCode === 200) {
           setIdCertControl(response.data);
         } else {
-          showAlertTopEnd('Error', 'No se pudo cargar la información del control de certificación', 'error');
+          showAlert('Error', 'No se pudo cargar la información del control de certificación', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al cargar el control de certificación', 'error');
+        showAlert('Error', 'Hubo un problema al cargar el control de certificación', 'error');
       }
       setIsLoading(false);
     };
@@ -46,13 +46,13 @@ const IdCertControlDetail = () => {
       try {
         const response = await Api.delete(`/id-cert-controls/${idCertControl._id}`); // Ajusta el endpoint según sea necesario
         if (response.statusCode === 200) {
-          showAlertTopEnd('Éxito', 'Registro eliminado correctamente', 'success');
+          showAlert('Éxito', 'Registro eliminado correctamente', 'success');
           navigate('/id-cert-controls'); // Redirigir a la lista de controles de certificación
         } else {
-          showAlertTopEnd('Error', 'No se pudo eliminar el registro', 'error');
+          showAlert('Error', 'No se pudo eliminar el registro', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al eliminar el registro', 'error');
+        showAlert('Error', 'Hubo un problema al eliminar el registro', 'error');
       }
     }
   };

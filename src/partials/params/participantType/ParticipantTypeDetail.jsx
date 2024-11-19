@@ -15,7 +15,7 @@ const ParticipantTypeDetail = () => {
       if (response.statusCode === 200) {
         setParticipantType(response.data);
       } else {
-        showAlertTopEnd('Error', 'No se pudo cargar la información del tipo de participante', 'error');
+        showAlert('Error', 'No se pudo cargar la información del tipo de participante', 'error');
       }
       setIsLoading(false);
     };
@@ -42,13 +42,13 @@ const ParticipantTypeDetail = () => {
       try {
         const response = await Api.delete(`/participant-types/${participantType._id}`); // Ajusta el endpoint según sea necesario
         if (response.statusCode === 200) {
-          showAlertTopEnd('Éxito', 'Tipo de participante eliminado correctamente', 'success');
+          showAlert('Éxito', 'Tipo de participante eliminado correctamente', 'success');
           navigate('/participant-types'); // Redirigir a la lista de tipos de participante
         } else {
-          showAlertTopEnd('Error', 'No se pudo eliminar el tipo de participante', 'error');
+          showAlert('Error', 'No se pudo eliminar el tipo de participante', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al eliminar el tipo de participante', 'error');
+        showAlert('Error', 'Hubo un problema al eliminar el tipo de participante', 'error');
       }
     }
   };

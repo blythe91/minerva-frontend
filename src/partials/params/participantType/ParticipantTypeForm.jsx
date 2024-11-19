@@ -35,7 +35,7 @@ const ParticipantTypeForm = () => {
         if (response.statusCode === 200) {
           setInitialValues(response.data);
         } else {
-          showAlertTopEnd('Error', 'No se pudo cargar la información del tipo de participante', 'error');
+          showAlert('Error', 'No se pudo cargar la información del tipo de participante', 'error');
         }
         setIsLoading(false);
       };
@@ -58,7 +58,7 @@ const ParticipantTypeForm = () => {
       }
 
       if (response.statusCode === 200 || response.statusCode === 201) {
-        showAlertTopEnd('Éxito', id ? 'Tipo de participante actualizado correctamente' : 'Tipo de participante agregado correctamente', 'success');
+        showAlert('Éxito', id ? 'Tipo de participante actualizado correctamente' : 'Tipo de participante agregado correctamente', 'success');
         navigate('/participant-types');
       } else if (response.statusCode === 422 && response.data.errors) {
         // Manejar errores de validación del backend (código 400)

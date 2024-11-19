@@ -16,7 +16,7 @@ const EventDetail = () => {
       if (response.statusCode === 200) {
         setEvent(response.data);
       } else {
-        showAlertTopEnd('Error', 'No se pudo cargar la información del evento', 'error');
+        showAlert('Error', 'No se pudo cargar la información del evento', 'error');
       }
       setIsLoading(false);
     };
@@ -42,13 +42,13 @@ const EventDetail = () => {
       try {
         const response = await Api.delete(`/events/${event._id}`);
         if (response.statusCode === 200) {
-          showAlertTopEnd('Éxito', 'Evento eliminado correctamente', 'success');
+          showAlert('Éxito', 'Evento eliminado correctamente', 'success');
           navigate('/events');
         } else {
-          showAlertTopEnd('Error', 'No se pudo eliminar el evento', 'error');
+          showAlert('Error', 'No se pudo eliminar el evento', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al eliminar el evento', 'error');
+        showAlert('Error', 'Hubo un problema al eliminar el evento', 'error');
       }
     }
   };

@@ -60,7 +60,7 @@ const IdCertControlForm = () => {
         if (response.statusCode === 200) {
           setInitialValues(response.data);
         } else {
-          showAlertTopEnd('Error', 'No se pudo cargar el registro', 'error');
+          showAlert('Error', 'No se pudo cargar el registro', 'error');
         }
         setIsLoading(false);
       };
@@ -110,7 +110,7 @@ const IdCertControlForm = () => {
       }
 
       if (response.statusCode === 200 || response.statusCode === 201) {
-        showAlertTopEnd('Éxito', id ? 'Registro actualizado correctamente' : 'Registro agregado correctamente', 'success');
+        showAlert('Éxito', id ? 'Registro actualizado correctamente' : 'Registro agregado correctamente', 'success');
         navigate('/id-cert-controls');
       } else {
         showAlert('Error', 'Error al guardar los datos.', 'error');

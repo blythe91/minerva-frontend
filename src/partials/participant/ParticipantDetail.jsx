@@ -15,7 +15,7 @@ const ParticipantDetail = () => {
       if (response.statusCode === 200) {
         setParticipant(response.data);
       } else {
-        showAlertTopEnd('Error', 'No se pudo cargar la información del participante', 'error');
+        showAlert('Error', 'No se pudo cargar la información del participante', 'error');
       }
       setIsLoading(false);
     };
@@ -42,13 +42,13 @@ const ParticipantDetail = () => {
       try {
         const response = await Api.delete(`/participants/${participant._id}`); // Ajusta el endpoint según sea necesario
         if (response.statusCode === 200) {
-          showAlertTopEnd('Éxito', 'Participante eliminado correctamente', 'success');
+          showAlert('Éxito', 'Participante eliminado correctamente', 'success');
           navigate('/participants'); // Redirigir a la lista de participantes
         } else {
-          showAlertTopEnd('Error', 'No se pudo eliminar el participante', 'error');
+          showAlert('Error', 'No se pudo eliminar el participante', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al eliminar el participante', 'error');
+        showAlert('Error', 'Hubo un problema al eliminar el participante', 'error');
       }
     }
   };

@@ -35,7 +35,7 @@ const EventRoleForm = () => {
         if (response.statusCode === 200) {
           setInitialValues(response.data);
         } else {
-          showAlertTopEnd('Error', 'No se pudo cargar la información del rol', 'error');
+          showAlert('Error', 'No se pudo cargar la información del rol', 'error');
         }
         setIsLoading(false);
       };
@@ -58,7 +58,7 @@ const EventRoleForm = () => {
       }
 
       if (response.statusCode === 200 || response.statusCode === 201) {
-        showAlertTopEnd('Éxito', id ? 'Rol actualizado correctamente' : 'Rol agregado correctamente', 'success');
+        showAlert('Éxito', id ? 'Rol actualizado correctamente' : 'Rol agregado correctamente', 'success');
         navigate('/event-roles');
       } else if (response.statusCode === 422 && response.data.errors) {
         // Manejar errores de validación del backend (código 400)

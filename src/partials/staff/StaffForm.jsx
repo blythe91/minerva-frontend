@@ -80,7 +80,7 @@ const StaffForm = () => {
             titulo: data.titulo || '',
           });
         } else {
-          showAlertTopEnd('Error', 'No se pudo cargar la información del Staff', 'error');
+          showAlert('Error', 'No se pudo cargar la información del Staff', 'error');
         }
         setIsLoading(false);
       };
@@ -119,7 +119,7 @@ const StaffForm = () => {
       }
 
       if (response.statusCode === 200 || response.statusCode === 201) {
-        showAlertTopEnd('Éxito', id ? 'Staff actualizado correctamente' : 'Staff agregado correctamente', 'success');
+        showAlert('Éxito', id ? 'Staff actualizado correctamente' : 'Staff agregado correctamente', 'success');
         navigate('/staff');
       } else if (response.statusCode === 422 && response.data.errors) {
         Object.keys(response.data.errors).forEach((field) => {

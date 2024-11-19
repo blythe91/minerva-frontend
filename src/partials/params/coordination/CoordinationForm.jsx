@@ -35,7 +35,7 @@ const CoordinationForm = () => {
         if (response.statusCode === 200) {
           setInitialValues(response.data);
         } else {
-          showAlertTopEnd('Error', 'No se pudo cargar la información de la coordinación', 'error');
+          showAlert('Error', 'No se pudo cargar la información de la coordinación', 'error');
         }
         setIsLoading(false);
       };
@@ -58,7 +58,7 @@ const CoordinationForm = () => {
       }
 
       if (response.statusCode === 200 || response.statusCode === 201) {
-        showAlertTopEnd('Éxito', id ? 'Coordinación actualizada correctamente' : 'Coordinación agregada correctamente', 'success');
+        showAlert('Éxito', id ? 'Coordinación actualizada correctamente' : 'Coordinación agregada correctamente', 'success');
         navigate('/coordinations');
       } else if (response.statusCode === 422 && response.data.errors) {
         // Manejar errores de validación del backend

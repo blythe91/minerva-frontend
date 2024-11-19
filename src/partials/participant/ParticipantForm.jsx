@@ -80,7 +80,7 @@ const ParticipantForm = () => {
         if (response.statusCode === 200) {
           setInitialValues(response.data);
         } else {
-          showAlertTopEnd('Error', 'No se pudo cargar la información del participante', 'error');
+          showAlert('Error', 'No se pudo cargar la información del participante', 'error');
         }
         setIsLoading(false);
       };
@@ -124,7 +124,7 @@ const ParticipantForm = () => {
   
       if (response.statusCode === 200 || response.statusCode === 201) {
         // Éxito en la operación
-        showAlertTopEnd('Éxito', id ? 'Participante actualizado correctamente' : 'Participante agregado correctamente', 'success');
+        showAlert('Éxito', id ? 'Participante actualizado correctamente' : 'Participante agregado correctamente', 'success');
         navigate('/participants');
       } else if (response.statusCode === 422 && response.data.errors) {
         // Manejar errores de validación del backend (código 400)

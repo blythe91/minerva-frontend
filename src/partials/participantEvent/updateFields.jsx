@@ -283,132 +283,139 @@ function UpdateFields() {
 //   };
 
 const updateDiscrepancies = async () => {
-    try {
+  try {
       setIsLoading(true);
       setCurrentStage('Preparando datos para actualización...');
-    
+
       const discrepantRecords = discrepancies.filter((discrepancy) => {
-        return discrepancy.discrepancies && discrepancy.discrepancies.length > 0;
+          return discrepancy.discrepancies && discrepancy.discrepancies.length > 0;
       });
-    
+
       let totalRecords = discrepantRecords.length;
       let processedRecords = 0;
       let successes = 0;
       let failures = 0;
       let results = [];
-    
+
       if (totalRecords === 0) {
-        setCurrentStage('No se encontraron discrepancias para actualizar');
-        setIsLoading(false);
-        return;
+          setCurrentStage('No se encontraron discrepancias para actualizar');
+          setIsLoading(false);
+          return;
       }
-    
+
       for (let i = 0; i < discrepantRecords.length; i++) {
-        const discrepancy = discrepantRecords[i];
-        const participantEvent = participantEventsData.find(
-          (event) => event.participant_id === discrepancy.participant_id && event.event_id === discrepancy.event_id
-        );
-    
-        if (!participantEvent) continue;
-    
-        let updateRecord = { ...participantEvent };
-    
-        const participantData = participantsData.find(p => p._id === discrepancy.participant_id);
-        const eventData = eventsData.find(e => e._id === discrepancy.event_id);
-        const participantTypeData = participantTypesData.find(pt => pt._id === discrepancy.participant_type_id);
-        const certificateTypeData = certificateTypesData.find(ct => ct._id === discrepancy.certificate_type_id);
-  
-        console.log("////////////////////////////////////////////////////");
-        console.log("///////////////certificateTypesData//////////////////");
-        console.log(certificateTypesData);
-        console.log("///////////////id de discrepancia://////////////////");
-        console.log(discrepancy.certificate_type_id);
-        console.log("////////////////////////////////////////////////////");
-  
-        console.log("////////////////////////////////////////////////////");
-        console.log("///////////////participantTypesData//////////////////");
-        console.log(participantTypesData);
-        console.log("///////////////id de discrepancia://////////////////");
-        console.log(discrepancy.participant_type_id);
-        console.log("////////////////////////////////////////////////////");
-    
-        for (const field of discrepancy.discrepancies) {
-          if (field.field === 'Nombre/Apellidos/Correo') {
-            updateRecord.pri_nom = participantData?.pri_nom || updateRecord.pri_nom;
-            updateRecord.seg_nom = participantData?.seg_nom || updateRecord.seg_nom;
-            updateRecord.pri_ape = participantData?.pri_ape || updateRecord.pri_ape;
-            updateRecord.seg_ape = participantData?.seg_ape || updateRecord.seg_ape;
-            updateRecord.email = participantData?.email || updateRecord.email;
+          const discrepancy = discrepantRecords[i];
+          const participantEvent = participantEventsData.find(
+              (event) =>
+                  event.participant_id === discrepancy.participant_id &&
+                  event.event_id === discrepancy.event_id
+          );
+
+          if (!participantEvent) continue;
+
+          // Crear un registro actualizado basado en los datos actuales
+          let updateRecord = { ...participantEvent };
+
+          // Buscar datos relacionados
+          const participantData = participantsData.find((p) => p._id === discrepancy.participant_id);
+          const eventData = eventsData.find((e) => e._id === discrepancy.event_id);
+          const participantTypeData = participantTypesData.find(
+              (pt) => pt._id === discrepancy.participant_type_id
+          );
+          const certificateTypeData = certificateTypesData.find(
+              (ct) => ct._id === discrepancy.certificate_type_id
+          );
+
+          // Actualizar todos los campos
+          if (participantData) {
+              updateRecord = {
+                  ...updateRecord,
+                  pri_nom: participantData.pri_nom || updateRecord.pri_nom,
+                  seg_nom: participantData.seg_nom || updateRecord.seg_nom,
+                  pri_ape: participantData.pri_ape || updateRecord.pri_ape,
+                  seg_ape: participantData.seg_ape || updateRecord.seg_ape,
+                  cedula: String(participantData.cedula || updateRecord.cedula),
+                  email: participantData.email || updateRecord.email,
+                  celular: participantData.celular,
+                  nacionalidad: participantData.nacionalidad,
+                  pais: participantData.pais,
+                  estado: participantData.estado,
+                  ciudad: participantData.ciudad,
+                  direccion: participantData.direccion,
+                  codigo_postal: participantData.codigo_postal,
+                  organizacion: participantData.organizacion,
+                  cargo: participantData.cargo,
+              };
           }
-    
-          if (field.field === 'Evento') {
-            updateRecord.name_event = eventData?.name_event || updateRecord.name_event;
+
+          if (eventData) {
+              updateRecord = {
+                  ...updateRecord,
+                  name_event: eventData.name_event,
+                  event_prefix: eventData.event_prefix,
+                  coordination_name: eventData.coordination_name,
+                  event_type_name: eventData.event_type_name,
+                  academic_hours: eventData.academic_hours,
+                  start_date: eventData.start_date,
+                  end_date: eventData.end_date,
+                  address: eventData.address,
+                  event_modality: eventData.event_modality,
+              };
           }
-    
-          if (field.field === 'Prefijo del Evento') {
-            updateRecord.event_prefix = eventData?.event_prefix || updateRecord.event_prefix;
+
+          if (participantTypeData) {
+              updateRecord = {
+                  ...updateRecord,
+                  participant_type_id: discrepancy.participant_type_id,
+                  name_participant_type: participantTypeData.name_participant_type,
+              };
           }
-    
-          if (field.field === 'Nombre de Coordinación') {
-            updateRecord.coordination_name = eventData?.coordination_name || updateRecord.coordination_name;
+
+          if (certificateTypeData) {
+              updateRecord = {
+                  ...updateRecord,
+                  certificate_type_id: discrepancy.certificate_type_id,
+                  name_certificate_type: certificateTypeData.name_certificate_type,
+              };
           }
-    
-          if (field.field === 'Tipo de Evento') {
-            updateRecord.event_type_name = eventData?.event_type_name || updateRecord.event_type_name;
+
+          try {
+              // Llamada a la API para actualizar el registro
+              const response = await Api.put(`/participant-events/${participantEvent._id}`, updateRecord);
+
+              if (response.status === 204) {
+                  successes++;
+                  results.push(`Registro actualizado correctamente: ${participantEvent._id}`);
+              } else {
+                  failures++;
+                  results.push(`Error al actualizar registro (respuesta inesperada ${response.status}): ${participantEvent._id}`);
+              }
+
+              const progressPercentage = Math.round(((i + 1) / totalRecords) * 100);
+              setProgress(progressPercentage);
+              setCurrentStage(`Actualizando datos (${i + 1} de ${totalRecords})`);
+          } catch (error) {
+              console.error(`Error al actualizar registro: ${participantEvent._id}`, error);
+              failures++;
+              results.push(`Error al actualizar registro: ${participantEvent._id}`);
           }
-    
-          if (field.field === 'Tipo de Participante') {
-            updateRecord.participant_type_id = discrepancy.participant_type_id || updateRecord.participant_type_id;
-            updateRecord.name_participant_type = participantTypeData?.name_participant_type || updateRecord.name_participant_type;
-            console.log(`Actualizando tipo de participante: ${updateRecord.name_participant_type}`);
-          }
-    
-          if (field.field === 'Tipo de Certificado') {
-            updateRecord.certificate_type_id = discrepancy.certificate_type_id || updateRecord.certificate_type_id;
-            updateRecord.name_certificate_type = certificateTypeData?.name_certificate_type || updateRecord.name_certificate_type;
-            console.log(`Actualizando tipo de certificado: ${updateRecord.name_certificate_type}`);
-          }
-    
-          updateRecord.cedula = String(participantData?.cedula || updateRecord.cedula);
-        }
-  
-        try {
-          // Llamada a la API con await para asegurar que cada actualización se ejecute correctamente
-          const response = await Api.put(`/participant-events/${participantEvent._id}`, updateRecord);
-          
-          if (response.status === 204) {
-            successes++;
-            results.push(`Registro actualizado correctamente: ${participantEvent._id}`);
-          } else {
-            failures++;
-            results.push(`Error al actualizar registro (respuesta inesperada ${response.status}): ${participantEvent._id}`);
-          }
-  
-          const progressPercentage = Math.round(((i + 1) / totalRecords) * 100);
-          setProgress(progressPercentage);
-          setCurrentStage(`Actualizando datos (${i + 1} de ${totalRecords})`);
-  
-        } catch (error) {
-          console.error(`Error al actualizar registro: ${participantEvent._id}`, error);
-          failures++;
-          results.push(`Error al actualizar registro: ${participantEvent._id}`);
-        }
-  
-        processedRecords++;
+
+          processedRecords++;
       }
-    
+
       // Actualizar estado y finalizar
       setUpdateResults(results);
       setSuccessCount(successes);
       setFailCount(failures);
       setCurrentStage('Actualización completada');
       setIsLoading(false);
-    } catch (error) {
+  } catch (error) {
       console.error('Error general al procesar las discrepancias:', error);
       setCurrentStage('Error al actualizar los campos');
       setIsLoading(false);
-    }
-  };
+  }
+};
+
   
   const columns = [
     {

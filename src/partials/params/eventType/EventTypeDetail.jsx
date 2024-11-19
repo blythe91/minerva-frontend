@@ -15,7 +15,7 @@ const EventTypeDetail = () => {
       if (response.statusCode === 200) {
         setEventType(response.data);
       } else {
-        showAlertTopEnd('Error', 'No se pudo cargar la información del tipo de evento', 'error');
+        showAlert('Error', 'No se pudo cargar la información del tipo de evento', 'error');
       }
       setIsLoading(false);
     };
@@ -42,13 +42,13 @@ const EventTypeDetail = () => {
       try {
         const response = await Api.delete(`/event-types/${eventType._id}`); // Ajusta el endpoint según sea necesario
         if (response.statusCode === 200) {
-          showAlertTopEnd('Éxito', 'Tipo de evento eliminado correctamente', 'success');
+          showAlert('Éxito', 'Tipo de evento eliminado correctamente', 'success');
           navigate('/event-types'); // Redirigir a la lista de tipos de eventos
         } else {
-          showAlertTopEnd('Error', 'No se pudo eliminar el tipo de evento', 'error');
+          showAlert('Error', 'No se pudo eliminar el tipo de evento', 'error');
         }
       } catch (error) {
-        showAlertTopEnd('Error', 'Hubo un problema al eliminar el tipo de evento', 'error');
+        showAlert('Error', 'Hubo un problema al eliminar el tipo de evento', 'error');
       }
     }
   };
