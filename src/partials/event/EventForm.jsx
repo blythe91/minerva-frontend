@@ -11,13 +11,16 @@ const EventForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [eventTypes, setEventTypes] = useState([]);
   const [coordinations, setCoordinations] = useState([]);
-  
+
   const [eventPrefix, setEventPrefix] = useState({
     coordinationID: '',
     currentYear: new Date().getFullYear(),
     eventTypeAbrev: ''
   });
 
+  // ** NUEVAS FUNCIONES AGREGADAS ** //
+
+  // Actualiza el prefijo del evento en base a los cambios en coordinación o tipo de evento
   const updateEventPrefix = (field, value) => {
     setEventPrefix(prev => ({
       ...prev,
@@ -25,9 +28,94 @@ const EventForm = () => {
     }));
   };
 
+  // Genera el prefijo del evento dinámicamente
   const generateEventPrefix = () => {
     return `${eventPrefix.coordinationID}-${eventPrefix.currentYear}-${eventPrefix.eventTypeAbrev}`;
   };
+
+  // ** FUNCIONES DE FETCH DE DATOS ** //
+
+  useEffect(() => {
+    const fetchEventTypes = async () => {
+      const response = await Api.get('/event-types');
+      if (response.statusCode === 200) {
+        setEventTypes(response.data);
+      } else {
+        showAlert('Error', 'No se pudo cargar los tipos de evento', 'error');
+      }
+    };
+
+    const fetchCoordinations = async () => {
+      const response = await Api.get('/coordinations');
+      if (response.statusCode === 200) {
+        setCoordinations(response.data);
+      } else {
+        showAlert('Error', 'No se pudo cargar las coordinaciones', 'error');
+      }
+    };
+
+    // Nueva función para actualizar el prefijo cuando cambian los datos de coordinación o tipo de evento
+    const updatePrefixFromInitialValues = (data) => {
+      updateEventPrefix('coordinationID', data.coordination_id || '');
+      updateEventPrefix('eventTypeAbrev', data.event_type_name ? data.event_type_name.substring(0, 3).toUpperCase() : '');
+    };
+
+    fetchEventTypes();
+    fetchCoordinations();
+
+    if (id) {
+      const fetchEvent = async () => {
+        setIsLoading(true);
+        const response = await Api.get(`/events/${id}`);
+        if (response.statusCode === 200) {
+          setInitialValues(response.data);
+          updatePrefixFromInitialValues(response.data); // Actualiza el prefijo al cargar el evento
+        } else {
+          showAlertTopEnd('Error', 'No se pudo cargar la información del evento', 'error');
+        }
+        setIsLoading(false);
+      };
+
+      fetchEvent();
+    }
+  }, [id]);
+
+  const [initialValues, setInitialValues] = useState({
+    name_event: '',
+    academic_hours: '',
+    event_type_id: '',
+    event_type_name: '',
+    event_prefix: generateEventPrefix(),
+    coordination_id: '',
+    coordination_name: '',
+    start_date: '',
+    end_date: '',
+    address: '',
+    event_modality: '', // Agregado
+    date_line_text: '',
+    certificate_template_name: '', // Agregado
+    event_open_text: '', // Agregado
+    programatic_content: '', // Agregado
+    teacher: '', // Agregado
+    teacher_title: '', // Agregado
+  
+    // Firmas
+    name_signature1: '', 
+    jobtitle_signature1: '', 
+    image_signature1: '', 
+    name_signature2: '', 
+    jobtitle_signature2: '', 
+    image_signature2: '', 
+    name_signature3: '', 
+    jobtitle_signature3: '', 
+    image_signature3: '',
+  
+    // Archivos
+    font_file: '',
+    certificate_template: '',
+  });
+
+  // ** VALIDACIÓN DEL FORMULARIO ** //
 
   const validationSchema = Yup.object({
     name_event: Yup.string()
@@ -52,124 +140,106 @@ const EventForm = () => {
     start_date: Yup.date()
       .required('La fecha de inicio es requerida'),
     end_date: Yup.date()
-      .required('La fecha de finalización es requerida'),
+      .required('La fecha de finalización es requerida')
+      .min(Yup.ref('start_date'), 'La fecha de finalización debe ser posterior a la de inicio'),
     address: Yup.string()
       .nullable()
-      .max(255, 'La dirección no puede exceder 255 caracteres'),
+      .max(500, 'La dirección no puede exceder 500 caracteres'),
+  
+    // Campos adicionales
+    event_modality: Yup.string()
+      .required('La modalidad del evento es requerida')
+      .max(50, 'La modalidad no puede exceder 50 caracteres'),
     date_line_text: Yup.string()
-      .nullable()
+      .required('El texto de la línea de fecha es obligatorio')
       .max(255, 'El texto de la línea de fecha no puede exceder 255 caracteres'),
+    certificate_template_name: Yup.string()
+      .required('El nombre de la plantilla del certificado es obligatorio')
+      .max(255, 'El nombre no puede exceder 255 caracteres'),
+    event_open_text: Yup.string()
+      .required('El texto introductorio del evento es obligatorio')
+      .max(255, 'El texto introductorio no puede exceder 255 caracteres'),
+    programatic_content: Yup.string()
+      .nullable()
+      .max(5000, 'El contenido programático no puede exceder 5000 caracteres'),
+    teacher: Yup.string()
+      .nullable()
+      .max(255, 'El nombre del facilitador no puede exceder 255 caracteres'),
+    teacher_title: Yup.string()
+      .nullable()
+      .max(100, 'El título del facilitador no puede exceder 100 caracteres'),
+  
+    // Validación de firmas
+    // name_signature1: Yup.string()
+    //   .required('El nombre del primer firmante es obligatorio')
+    //   .max(255, 'El nombre no puede exceder 255 caracteres'),
+    // jobtitle_signature1: Yup.string()
+    //   .required('El cargo del primer firmante es obligatorio')
+    //   .max(255, 'El cargo no puede exceder 255 caracteres'),
+    // image_signature1: Yup.string()
+    //   .required('El nombre de la imagen de la firma del primer firmante es obligatoria')
+    //   .max(255, 'El nombre de la imagen de la firma del primer firmante no puede exceder 255 caracteres'),
+  
+    // name_signature2: Yup.string()
+    //   .required('El nombre del segundo firmante es obligatorio')
+    //   .max(255, 'El nombre no puede exceder 255 caracteres'),
+    // jobtitle_signature2: Yup.string()
+    //   .required('El cargo del segundo firmante es obligatorio')
+    //   .max(255, 'El cargo no puede exceder 255 caracteres'),
+    // image_signature2: Yup.string()
+    //   .required('El nombre de la imagen de la firma del segundo firmante es obligatoria')
+    //   .max(255, 'El nombre de la imagen de la firma del segundo firmante no puede exceder 255 caracteres'),
+  
+    // name_signature3: Yup.string()
+    //   .required('El nombre del tercer firmante es obligatorio')
+    //   .max(255, 'El nombre no puede exceder 255 caracteres'),
+    // jobtitle_signature3: Yup.string()
+    //   .required('El cargo del tercer firmante es obligatorio')
+    //   .max(255, 'El cargo no puede exceder 255 caracteres'),
+    // image_signature3: Yup.string()
+    //   .required('El nombre de la imagen de la firma del tercer firmante es obligatoria')
+    //   .max(255, 'El nombre de la imagen de la firma del tercer firmante no puede exceder 255 caracteres'),
+  
+    // Archivos de fuente y plantilla
     font_file: Yup.mixed()
       .nullable()
       .test('fileType', 'El archivo debe ser un archivo de fuente (ttf, otf)', (value) => {
-        if (!value) return true; // Permitir que el campo sea opcional
+        if (!value) return true;
         const allowedTypes = ['font/ttf', 'font/otf'];
-        return value && allowedTypes.includes(value.type);
+        return allowedTypes.includes(value.type);
       })
-      .test('fileSize', 'El archivo no puede exceder los 10 MB', (value) => {
-        return !value || (value && value.size <= 10000000);
-      }),
+      .test('fileSize', 'El archivo no puede exceder los 10 MB', (value) => !value || value.size <= 10000000),
     certificate_template: Yup.mixed()
       .nullable()
       .test('fileType', 'La plantilla debe ser una imagen (jpeg, png)', (value) => {
-        if (!value) return true; // Permitir que el campo sea opcional
+        if (!value) return true;
         const allowedTypes = ['image/jpeg', 'image/png'];
-        return value && allowedTypes.includes(value.type);
+        return allowedTypes.includes(value.type);
       })
-      .test('fileSize', 'La imagen no puede exceder los 2 MB', (value) => {
-        return !value || (value && value.size <= 2000000);
-      }),
+      .test('fileSize', 'La imagen no puede exceder los 2 MB', (value) => !value || value.size <= 2000000),
   });
 
-  useEffect(() => {
-    const fetchEventTypes = async () => {
-      const response = await Api.get('/event-types');
-      if (response.statusCode === 200) {
-        setEventTypes(response.data);
-      } else {
-        showAlert('Error', 'No se pudo cargar los tipos de evento', 'error');
-      }
-    };
-
-    const fetchCoordinations = async () => {
-      const response = await Api.get('/coordinations');
-      if (response.statusCode === 200) {
-        setCoordinations(response.data);
-      } else {
-        showAlert('Error', 'No se pudo cargar las coordinaciones', 'error');
-      }
-    };
-
-    fetchEventTypes();
-    fetchCoordinations();
-
-    if (id) {
-      const fetchEvent = async () => {
-        setIsLoading(true);
-        const response = await Api.get(`/events/${id}`);
-        if (response.statusCode === 200) {
-          setInitialValues(response.data);
-        } else {
-          showAlertTopEnd('Error', 'No se pudo cargar la información del evento', 'error');
-        }
-        setIsLoading(false);
-      };
-
-      fetchEvent();
-    }
-  }, [id]);
-
-  const [initialValues, setInitialValues] = useState({
-    name_event: '',
-    academic_hours: '',
-    event_type_id: '',
-    event_type_name: '',
-    event_prefix: generateEventPrefix(),
-    coordination_id: '',
-    coordination_name: '',
-    start_date: '',
-    end_date: '',
-    address: '',
-    date_line_text: '',
-    font_file_path: '',
-    certificate_template_path: '',
-  });
+  // ** FUNCIONES DE SUBMIT Y NAVEGACIÓN ** //
 
   const handleSubmit = async (values) => {
-    
-
     const formData = new FormData();
-    const e=0;
 
-    // Añadir campos al FormData
+    // Iterar y añadir campos al FormData
     Object.keys(values).forEach((key) => {
       if (key === 'font_file' || key === 'certificate_template') {
-        // Solo añadir los archivos si existen
-        if (values[key]) {
-          formData.append(key, values[key]);
-          console.log(key + ':', values[key]);
-        }
+        if (values[key]) formData.append(key, values[key]);
       } else {
         formData.append(key, values[key]);
-        console.log(key + ':', values[key]);
       }
     });
 
-  // Debug: Mostrar contenido del FormData
-  console.log("Contenido del formData luego de Iterar");
-  for (let pair of formData.entries()) {
-    console.log(pair[0] + ':', pair[1]);
-  }
-      
     setIsLoading(true);
 
     try {
       let response;
       if (id) {
-        // Actualizar evento
         response = await Api.put(`/events/${id}`, values);
       } else {
-        // Crear nuevo evento
         response = await Api.post('/events', values);
       }
 
@@ -177,24 +247,21 @@ const EventForm = () => {
         showAlertTopEnd('Éxito', id ? 'Evento actualizado correctamente' : 'Evento agregado correctamente', 'success');
         navigate('/events');
       } else if (response.statusCode === 422 && response.data.errors) {
-        // Manejar errores de validación del backend (código 400)
-        Object.keys(response.data.errors).forEach((field) => {
-          const errorMsg = response.data.errors[field].join(' ');
-          showAlert('Error', `${field}: ${errorMsg}`, 'error');
+        Object.entries(response.data.errors).forEach(([field, messages]) => {
+          showAlert('Error', `${field}: ${messages.join(' ')}`, 'error');
         });
       } else {
-        showAlert('Error', response.data.error + ` (${response.statusCode})`, 'error');
+        showAlert('Error', `(${response.statusCode}) ${response.data.error}`, 'error');
       }
-    } catch (error) {
+    } catch {
       showAlert('Error', 'Hubo un problema al guardar los datos', 'error');
     }
 
     setIsLoading(false);
   };
 
-  const handleBack = () => {
-    navigate(-1);
-  };
+  const handleBack = () => navigate(-1);
+
 
 
   return (
@@ -335,15 +402,7 @@ const EventForm = () => {
               <ErrorMessage name="end_date" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
-            <div>
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700">Dirección (opcional)</label>
-              <Field
-                name="address"
-                type="text"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-              <ErrorMessage name="address" component="div" className="text-red-600 text-sm mt-1" />
-            </div>
+            
 
             <div className="mb-4">
               <label htmlFor="event_modality" className="block text-sm font-medium text-gray-700">
@@ -372,7 +431,7 @@ const EventForm = () => {
             </div>
             <div>
               <label htmlFor="date_line_text" className="block text-sm font-medium text-gray-700">
-                Texto de la línea de fecha (opcional)
+                Texto de la línea de fecha [Certificado]
               </label>
               <Field
                 name="date_line_text"
@@ -381,9 +440,189 @@ const EventForm = () => {
               />
               <ErrorMessage name="date_line_text" component="div" className="text-red-600 text-sm mt-1" />
             </div>
-
+            <div>
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700">Dirección (o plataforma virtual en caso de ser ONLINE)</label>
+              <Field
+                name="address"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="address" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+            <div>
+              <label htmlFor="certificate_template_name" className="block text-sm font-medium text-gray-700">
+                Nombre de la Plantilla del Certificado
+              </label>
+              <Field
+                name="certificate_template_name"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="certificate_template_name" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
 
             <div>
+              <label htmlFor="event_open_text" className="block text-sm font-medium text-gray-700">
+                Texto libre sobre el nombre del evento [Certificado]
+              </label>
+              <Field
+                name="event_open_text"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="event_open_text" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            
+
+            <div>
+              <label htmlFor="teacher" className="block text-sm font-medium text-gray-700">
+                Nombre del Facilitador (opcional)
+              </label>
+              <Field
+                name="teacher"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="teacher" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="teacher_title" className="block text-sm font-medium text-gray-700">
+                Cargo del Expositor (opcional)
+              </label>
+              <Field
+                name="teacher_title"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="teacher_title" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            {/* Campos de firmas */}
+            <div>
+              <label htmlFor="name_signature1" className="block text-sm font-medium text-gray-700">
+                Nombre del Firmante 1
+              </label>
+              <Field
+                name="name_signature1"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="name_signature1" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="jobtitle_signature1" className="block text-sm font-medium text-gray-700">
+                Cargo del Firmante 1
+              </label>
+              <Field
+                name="jobtitle_signature1"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="jobtitle_signature1" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="image_signature1" className="block text-sm font-medium text-gray-700">
+                Nombre de la Imagen de Firma 1
+              </label>
+              <Field
+                name="image_signature1"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="image_signature1" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="name_signature2" className="block text-sm font-medium text-gray-700">
+                Nombre del Firmante 2
+              </label>
+              <Field
+                name="name_signature2"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="name_signature2" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="jobtitle_signature2" className="block text-sm font-medium text-gray-700">
+                Cargo del Firmante 2
+              </label>
+              <Field
+                name="jobtitle_signature2"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="jobtitle_signature2" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="image_signature2" className="block text-sm font-medium text-gray-700">
+                Nombre de la Imagen de Firma 2
+              </label>
+              <Field
+                name="image_signature2"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="image_signature2" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="name_signature3" className="block text-sm font-medium text-gray-700">
+                Nombre del Firmante 3
+              </label>
+              <Field
+                name="name_signature3"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="name_signature3" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="jobtitle_signature3" className="block text-sm font-medium text-gray-700">
+                Cargo del Firmante 3
+              </label>
+              <Field
+                name="jobtitle_signature3"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="jobtitle_signature3" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="image_signature3" className="block text-sm font-medium text-gray-700">
+                Nombre de la Imagen de Firma 3
+              </label>
+              <Field
+                name="image_signature3"
+                type="text"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <ErrorMessage name="image_signature3" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            <div>
+              <label htmlFor="programatic_content" className="block text-sm font-medium text-gray-700">
+                Contenido Programático (opcional)
+              </label>
+              <Field
+                as="textarea"
+                name="programatic_content"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                rows="4"
+              />
+              <ErrorMessage name="programatic_content" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+
+            {/* campos de archivo de fuente y de plantilla de certificado */}
+            {/* <div>
               <label htmlFor="font_file" className="block text-sm font-medium text-gray-700">Archivo de Fuente</label>
               <input
                 name="font_file"
@@ -394,13 +633,12 @@ const EventForm = () => {
                   const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
                   setFieldValue("font_file", file);
                   /* const file = event.currentTarget.files[0];
-                  console.log("Selected file font:", file); */
+                  console.log("Selected file font:", file); 
                 }}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <ErrorMessage name="font_file" component="div" className="text-red-600 text-sm mt-1" />
             </div>
-
             <div>
               <label htmlFor="certificate_template" className="block text-sm font-medium text-gray-700">Plantilla de Certificado</label>
               <input
@@ -411,12 +649,12 @@ const EventForm = () => {
                   const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
                   setFieldValue("certificate_template", file);
                   /* const file = event.currentTarget.files[0];
-                  console.log("Selected file image:", file); */
+                  console.log("Selected file image:", file); 
                 }}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <ErrorMessage name="certificate_template" component="div" className="text-red-600 text-sm mt-1" />
-            </div>
+            </div> */}
 
             <div className="flex justify space-x-4">
               <button

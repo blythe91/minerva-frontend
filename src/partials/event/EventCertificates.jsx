@@ -21,7 +21,7 @@ const EventCertificates = () => {
         console.log("/////");
         console.log(id);
         console.log("/////");
-        const response = await Api.get(`/participant-events?event_id=${id}`);
+        const response = await Api.get(`/participant-events/get-participants/${id}`);
 
         if (response.statusCode === 200 || response.status === 200) {
           setParticipantEvents(response.data);

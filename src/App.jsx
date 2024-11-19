@@ -82,6 +82,7 @@ function App() {
             <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/events/edit/:id" element={<EventForm />} />
             <Route path="/events/new" element={<EventForm />} />
+            
             <Route path="/events/:id/certificates" element={<EventCertificates />} />
             <Route path="/certgen-all/:id" element={<CertGenAll />} />
 
