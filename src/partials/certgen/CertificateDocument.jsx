@@ -126,7 +126,6 @@ Font.register({
       fontFamily: 'Roboto',
       color: '#050a30', // Azul oscuro
       textAlign: 'center',
-      marginBottom: 5,
       width: '100%',  // Asegura que ocupe todo el ancho disponible
       marginBottom: 20
     },
@@ -231,6 +230,7 @@ function CertificateDocument({
   participantEvent,
   eventDetails,
 }) {
+  
   return (
     <Document>
       {/* Primera cara del certificado */}
