@@ -23,134 +23,136 @@ Font.register({
   src: '/fonts/Roboto-BoldCondensed.ttf', // Reemplaza con la ruta correcta de tu archivo de fuente
 });
 
-const styles = StyleSheet.create({
-  page: {
-    backgroundColor: '#ffffff',
-    padding: 2,
-    position: 'relative',
-  },
-  background: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: -1,
-    opacity: 1,
-  },
-  section: {
-    marginTop: 3,
-    marginBottom: 3,
-    marginLeft: 6,
-    marginRight: 6,
-    padding: 6,
-  },
-  coordinationName: {
-    fontSize: 12,  // Ajusté el tamaño de la fuente a 12
-    fontWeight: 'bold',
-    fontFamily: 'Roboto',
-    color: '#050a30', // Azul oscuro
-    textAlign: 'left',
-    marginBottom: 10,
-    marginTop: 85,
-    marginLeft: 6,  // Corregí el margen izquierdo
-    paddingLeft: 240,
-    textTransform: 'uppercase',
-    width: '100%',  // Asegura que ocupe todo el ancho disponible
-  },
-  certificateTitle: {
-    fontSize: 42,
-    fontWeight: 'bold',
-    fontFamily: 'Roboto',
-    color: '#050a30', // Azul oscuro
-    textAlign: 'center',
-    marginTop: 20,
-    marginBottom: 0,
-    textTransform: 'uppercase',
-    width: '100%',  // Asegura que ocupe todo el ancho disponible
-  },
-  title: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    fontFamily: 'Roboto',
-    color: '#050a30', // Azul oscuro
-    textAlign: 'center',
-    marginBottom: 15,
-    width: '100%',  // Asegura que ocupe todo el ancho disponible
-  },
-  participantName: {
-    fontSize: 28,
-    fontStyle: 'italic',
-    color: '#996515', // Dorado
-    textAlign: 'center',
-    marginBottom: 10,
-    width: '100%',  // Asegura que ocupe todo el ancho disponible
-  },
-  idNumber: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    fontFamily: 'Roboto',
-    color: '#050a30', // Azul oscuro
-    textAlign: 'center',
-    marginBottom: 5,
-    width: '100%',  // Asegura que ocupe todo el ancho disponible
-    marginBottom: 20
-  },
-  eventName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: 'Roboto',
-    color: '#5db6fa', // Azul claro
-    textAlign: 'center',
-    marginBottom: 10,
-    width: '100%',  // Asegura que ocupe todo el ancho disponible
-  },
-  modalityAndDuration: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    fontFamily: 'Roboto',
-    color: '#050a30', // Azul oscuro
-    textAlign: 'center',
-    width: '100%',  // Asegura que ocupe todo el ancho disponible
-  },
-  dateLineText: {
-    fontSize: 12,
-    fontFamily: 'Roboto',
-    color: '#050a30', // Azul oscuro
-    textAlign: 'center',
-    width: '100%',  // Asegura que ocupe todo el ancho disponible
-  },
-  preambleEventName: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    fontFamily: 'Roboto',
-    color: '#050a30', // Azul oscuro
-    textAlign: 'center',
-    width: '100%',  // Asegura que ocupe todo el ancho disponible
+// const styles = StyleSheet.create({
+//   page: {
+//     backgroundColor: '#ffffff',
+//     padding: 2,
+//     position: 'relative',
+//   },
+//   background: {
+//     position: 'absolute',
+//     top: 0,
+//     left: 0,
+//     right: 0,
+//     bottom: 0,
+//     zIndex: -1,
+//     opacity: 1,
+//   },
+//   section: {
+//     marginTop: 3,
+//     marginBottom: 3,
+//     marginLeft: 6,
+//     marginRight: 6,
+//     padding: 6,
+//   },
+//   coordinationName: {
+//     fontSize: 12,  // Ajusté el tamaño de la fuente a 12
+//     fontWeight: 'bold',
+//     fontFamily: 'Roboto',
+//     color: '#050a30', // Azul oscuro
+//     textAlign: 'left',
+//     marginBottom: 10,
+//     marginTop: 85,
+//     marginLeft: 6,  // Corregí el margen izquierdo
+//     paddingLeft: 240,
+//     textTransform: 'uppercase',
+//     width: '100%',  // Asegura que ocupe todo el ancho disponible
+//   },
+//   certificateTitle: {
+//     fontSize: 42,
+//     fontWeight: 'bold',
+//     fontFamily: 'Roboto',
+//     color: '#050a30', // Azul oscuro
+//     textAlign: 'center',
+//     marginTop: 20,
+//     marginBottom: 0,
+//     textTransform: 'uppercase',
+//     width: '100%',  // Asegura que ocupe todo el ancho disponible
+//   },
+//   title: {
+//     fontSize: 12,
+//     fontWeight: 'bold',
+//     fontFamily: 'Roboto',
+//     color: '#050a30', // Azul oscuro
+//     textAlign: 'center',
+//     marginBottom: 15,
+//     width: '100%',  // Asegura que ocupe todo el ancho disponible
+//   },
+//   participantName: {
+//     fontSize: 28,
+//     fontStyle: 'italic',
+//     color: '#996515', // Dorado
+//     textAlign: 'center',
+//     marginBottom: 10,
+//     width: '100%',  // Asegura que ocupe todo el ancho disponible
+//   },
+//   idNumber: {
+//     fontSize: 12,
+//     fontWeight: 'bold',
+//     fontFamily: 'Roboto',
+//     color: '#050a30', // Azul oscuro
+//     textAlign: 'center',
+//     marginBottom: 5,
+//     width: '100%',  // Asegura que ocupe todo el ancho disponible
+//     marginBottom: 20
+//   },
+//   eventName: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     fontFamily: 'Roboto',
+//     color: '#5db6fa', // Azul claro
+//     textAlign: 'center',
+//     marginBottom: 10,
+//     width: '100%',  // Asegura que ocupe todo el ancho disponible
+//   },
+//   modalityAndDuration: {
+//     fontSize: 12,
+//     fontWeight: 'bold',
+//     fontFamily: 'Roboto',
+//     color: '#050a30', // Azul oscuro
+//     textAlign: 'center',
+//     width: '100%',  // Asegura que ocupe todo el ancho disponible
+//   },
+//   dateLineText: {
+//     fontSize: 12,
+//     fontFamily: 'Roboto',
+//     color: '#050a30', // Azul oscuro
+//     textAlign: 'center',
+//     width: '100%',  // Asegura que ocupe todo el ancho disponible
+//   },
+//   preambleEventName: {
+//     fontSize: 12,
+//     fontWeight: 'bold',
+//     fontFamily: 'Roboto',
+//     color: '#050a30', // Azul oscuro
+//     textAlign: 'center',
+//     width: '100%',  // Asegura que ocupe todo el ancho disponible
 
-  },
-  eventPrefix: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    fontFamily: 'Roboto',
-    color: '#050a30', // Azul oscuro
-    position: 'absolute',
-    bottom: 8,
-    right: 160,
-    width: 'auto',  // Evita que el texto ocupe más espacio de lo necesario
-  },
-  footer: {
-    fontSize: 12,
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  emptyLine: {
-    marginBottom: 5,
-  },
-});
+//   },
+//   eventPrefix: {
+//     fontSize: 10,
+//     fontWeight: 'bold',
+//     fontFamily: 'Roboto',
+//     color: '#050a30', // Azul oscuro
+//     position: 'absolute',
+//     bottom: 8,
+//     right: 160,
+//     width: 'auto',  // Evita que el texto ocupe más espacio de lo necesario
+//   },
+//   footer: {
+//     fontSize: 12,
+//     textAlign: 'center',
+//     marginTop: 20,
+//   },
+//   emptyLine: {
+//     marginBottom: 5,
+//   },
+// });
 
 
 // Componente CertGenAll
+
+
 const CertGenAll = () => {
   const { id } = useParams(); // Obtener el ID del evento por parámetros
   const [participantEvent, setParticipantEvent] = useState([]);
