@@ -32,7 +32,9 @@ const EventForm = () => {
   const generateEventPrefix = () => {
     return `${eventPrefix.coordinationID}-${eventPrefix.currentYear}-${eventPrefix.eventTypeAbrev}`;
   };
-
+  useEffect(() => {
+    //setEventPrefix(generateEventPrefix());
+  }), [eventPrefix];
   // ** FUNCIONES DE FETCH DE DATOS ** //
 
   useEffect(() => {
@@ -131,7 +133,7 @@ const EventForm = () => {
       .max(255, 'El nombre del tipo de evento no puede exceder 255 caracteres'),
     event_prefix: Yup.string()
       .nullable()
-      .max(10, 'El prefijo del evento no puede exceder 10 caracteres'),
+      .max(255, 'El prefijo del evento no puede exceder 10 caracteres'),
     coordination_id: Yup.string()
       .required('El ID de la coordinación es requerido'),
     coordination_name: Yup.string()
@@ -140,8 +142,7 @@ const EventForm = () => {
     start_date: Yup.date()
       .required('La fecha de inicio es requerida'),
     end_date: Yup.date()
-      .required('La fecha de finalización es requerida')
-      .min(Yup.ref('start_date'), 'La fecha de finalización debe ser posterior a la de inicio'),
+      .required('La fecha de finalización es requerida'),
     address: Yup.string()
       .nullable()
       .max(500, 'La dirección no puede exceder 500 caracteres'),
@@ -373,8 +374,7 @@ const EventForm = () => {
               <Field
                 name="event_prefix"
                 type="text"
-                readOnly
-                value={generateEventPrefix()}
+                // value={generateEventPrefix()}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <ErrorMessage name="event_prefix" component="div" className="text-red-600 text-sm mt-1" />

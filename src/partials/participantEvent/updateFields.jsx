@@ -381,14 +381,14 @@ const updateDiscrepancies = async () => {
 
           try {
               // Llamada a la API para actualizar el registro
-              const response = await Api.put(`/participant-events/${participantEvent._id}`, updateRecord);
+              const response = await Api.put(`/participant-events/${updateRecord._id}`, updateRecord);
 
-              if (response.status === 204) {
+              if (response.statusCode === 200) {
                   successes++;
-                  results.push(`Registro actualizado correctamente: ${participantEvent._id}`);
+                  results.push(`Registro actualizado correctamente: ${updateRecord._id}`);
               } else {
                   failures++;
-                  results.push(`Error al actualizar registro (respuesta inesperada ${response.status}): ${participantEvent._id}`);
+                  results.push(`Error al actualizar registro (respuesta inesperada ${response.statusCode}): ${updateRecord._id}`);
               }
 
               const progressPercentage = Math.round(((i + 1) / totalRecords) * 100);
