@@ -133,7 +133,7 @@ Font.register({
       fontSize: 16,
       fontWeight: 'bold',
       fontFamily: 'Roboto',
-      color: '#5db6fa', // Azul claro
+      color: '#114081', // Azul oscuro
       textAlign: 'center',
       marginBottom: 5,
       width: '100%',  // Asegura que ocupe todo el ancho disponible
@@ -146,7 +146,10 @@ Font.register({
       color: '#050a30', // Azul oscuro
       textAlign: 'center',
       width: '100%',  // Asegura que ocupe todo el ancho disponible
-      textTransform: 'uppercase',
+      // textTransform: 'uppercase',
+    },
+    modalityAndDurationText: {
+      fontWeight: 'normal',
     },
     teacher: {
       fontSize: 14,
@@ -167,6 +170,9 @@ Font.register({
       width: '100%',  // Asegura que ocupe todo el ancho disponible
       // textTransform: 'uppercase',
       
+    },
+    teacherFirstPageName: {
+      fontWeight: 'normal',
     },
     dateLineText: {
       fontSize: 13,
@@ -202,7 +208,7 @@ Font.register({
       color: '#050a30', // Azul oscuro
       position: 'absolute',
       bottom: 8,
-      right: 160,
+      right: 25,
       width: 'auto',  // Evita que el texto ocupe más espacio de lo necesario
     },
     footer: {
@@ -229,6 +235,7 @@ function CertificateDocument({
   signature3,
   participantEvent,
   eventDetails,
+  certificate_code
 }) {
   
   return (
@@ -239,7 +246,7 @@ function CertificateDocument({
 
         <View style={styles.section}>
           <Text style={styles.coordinationName}>
-            {participantEvent?.coordination_name || ''}
+            {/* {participantEvent?.coordination_name || ''} */}
           </Text>
           <Text style={styles.certificateTitle}>Certificado</Text>
           <Text style={styles.title}>Que se otorga a:</Text>
@@ -251,8 +258,8 @@ function CertificateDocument({
           </Text>
 
           <Text style={styles.preambleEventName}>
-            {eventDetails?.event_open_text} {eventDetails?.event_type_name} <br />
-            en calidad de {participantEvent?.name_participant_type || ''}:
+          En calidad de {participantEvent?.name_participant_type || ''} {eventDetails?.event_open_text} {eventDetails?.event_type_name} <br />
+            :
           </Text>
 
           <Text style={styles.eventName}>
@@ -261,14 +268,14 @@ function CertificateDocument({
 
           {!eventDetails?.programatic_content && eventDetails?.teacher && (
             <Text style={styles.teacherFirstPage}>
-              {eventDetails?.teacher_title || ''}: {eventDetails?.teacher || ''}
+              {eventDetails?.teacher_title || ''}: <Text style={styles.teacherFirstPageName}>{eventDetails?.teacher || ''}</Text>
             </Text>
           )}
           <Text style={styles.modalityAndDuration}>
-            MODALIDAD: {eventDetails?.event_modality || ''}
+            Modalidad: <Text style={styles.modalityAndDurationText}>{eventDetails?.event_modality || ''} </Text>
           </Text>
           <Text style={styles.modalityAndDuration}>
-            Duración: {eventDetails?.academic_hours || ''} horas académicas
+            Duración: <Text style={styles.modalityAndDurationText}>{eventDetails?.academic_hours || ''} horas académicas</Text>
           </Text>
           <Text style={styles.emptyLineThin}></Text>
           <Text style={styles.dateLineText}>
@@ -341,7 +348,9 @@ function CertificateDocument({
         </View>
         {/* código de certificado */}
         <Text style={styles.eventPrefix}>
-                {eventDetails?.event_prefix || 'sin codigo'}
+                {/* {participantEvent?.certificate_code || 'sin codigo'} */}
+                D.I.: {certificate_code || 'sin codigo'}
+                
             </Text>
       </Page>
 
@@ -351,7 +360,7 @@ function CertificateDocument({
           <Image src={backgroundImage} style={styles.background} />
           <View style={styles.section}>
             <Text style={styles.coordinationName}>
-              {eventDetails?.coordination_name || ''}
+              {/* {eventDetails?.coordination_name || ''} */}
             </Text>
             <Text style={styles.largeTitle}>CONTENIDO PROGRAMÁTICO</Text>
             <Text style={styles.emptyLine}></Text>

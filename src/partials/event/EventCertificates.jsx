@@ -56,7 +56,7 @@ const EventCertificates = () => {
       item.name_participant_type,
       item.name_certificate_type,
       item.name_event,
-      item.event_prefix,
+      item.certificate_code,
     ];
 
     return valuesToFilter.some(value =>
@@ -110,8 +110,8 @@ const EventCertificates = () => {
       sortable: true,
     },
     {
-      name: 'Prefijo del Evento',
-      selector: row => row.event_prefix,
+      name: 'Código de certificado',
+      selector: row => row.certificate_code,
       sortable: true,
     },
     {

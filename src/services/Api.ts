@@ -14,11 +14,11 @@ export class Api {
 
               if (data[key]) {
                 formData.append(key, data[key]);
-                console.log(key + ':', data[key]);
+                console.log(key + ':', data[key]+" formdata.");
               }
             } else {
               formData.append(key, data[key]);
-              console.log(key + ':', data[key]);
+              console.log(key + ':', data[key]+" json");
             }
           });
         const isFormData = data instanceof FormData;
