@@ -254,7 +254,7 @@ function CertificateDocument({
             {`${participantEvent?.pri_nom || ''} ${participantEvent?.seg_nom || ''} ${participantEvent?.pri_ape || ''} ${participantEvent?.seg_ape || ''}`}
           </Text>
           <Text style={styles.idNumber}>
-            V.-{participantEvent?.cedula || ''}
+            {participantEvent?.cedula || ''}
           </Text>
 
           <Text style={styles.preambleEventName}>

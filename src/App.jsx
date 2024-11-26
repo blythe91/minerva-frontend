@@ -40,14 +40,19 @@ import StaffForm from './partials/staff/StaffForm';
 import ParticipantEventTable from './partials/participantEvent/ParticipantEventTable';
 import ParticipantEventDetail from './partials/participantEvent/ParticipantEventDetail';
 import ParticipantEventForm from './partials/participantEvent/ParticipantEventForm';
-import CSVImportPE from './partials/csvimportpe/CSVImportPE';
-import CertGen from './partials/certgen/CertGen';
+
 import IdCertControlTable from './partials/params/idCertControl/IdCertControlTable';
 import IdCertControlDetail from './partials/params/idCertControl/IdCertControlDetail';
 import IdCertControlForm from './partials/params/idCertControl/IdCertControlForm';
 import UpdateFields from './partials/participantEvent/updateFields';
 import EventCertificates from './partials/event/EventCertificates';
-import CertGenAll from './partials/certgen/CertGenAll';
+import CSVImportPE from './partials/participantEvent/csvimportpe/CSVImportPE';
+import CertGen from './partials/event/certgen/CertGen';
+import CertGenAll from './partials/event/certgen/CertGenAll';
+
+// import CSVImportPE from './partials/csvimportpe/CSVImportPE';
+// import CertGen from './partials/certgen/CertGen';
+// 
 
 
 function App() {

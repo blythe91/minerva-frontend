@@ -31,9 +31,9 @@ export class Api {
 
         const response = await fetch(`${Api.baseUrl}${url}`, {
         method: "POST",
-        headers: !e
-            ? { "Content-Type": "application/json" } // Solo si NO es FormData
-            : { "Content-Type": "multipart/form-data" }, // header si es FormData
+        // headers: !e
+        //     ? { "Content-Type": "application/json" } // Solo si NO es FormData
+        //     : { "Content-Type": "multipart/form-data" }, // header si es FormData
         body: e ? data : JSON.stringify(data), // Si es FormData, usarlo tal cual
         });
 

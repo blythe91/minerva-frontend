@@ -621,40 +621,7 @@ const EventForm = () => {
               <ErrorMessage name="programatic_content" component="div" className="text-red-600 text-sm mt-1" />
             </div>
 
-            {/* campos de archivo de fuente y de plantilla de certificado */}
-            {/* <div>
-              <label htmlFor="font_file" className="block text-sm font-medium text-gray-700">Archivo de Fuente</label>
-              <input
-                name="font_file"
-                type="file"
-                accept=".ttf,.otf"
-                onChange={(event) => {
-                  
-                  const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
-                  setFieldValue("font_file", file);
-                  /* const file = event.currentTarget.files[0];
-                  console.log("Selected file font:", file); 
-                }}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-              <ErrorMessage name="font_file" component="div" className="text-red-600 text-sm mt-1" />
-            </div>
-            <div>
-              <label htmlFor="certificate_template" className="block text-sm font-medium text-gray-700">Plantilla de Certificado</label>
-              <input
-                name="certificate_template"
-                type="file"
-                accept="image/jpeg,image/png"
-                onChange={(event) => {
-                  const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
-                  setFieldValue("certificate_template", file);
-                  /* const file = event.currentTarget.files[0];
-                  console.log("Selected file image:", file); 
-                }}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-              <ErrorMessage name="certificate_template" component="div" className="text-red-600 text-sm mt-1" />
-            </div> */}
+             
 
             <div className="flex justify space-x-4">
               <button

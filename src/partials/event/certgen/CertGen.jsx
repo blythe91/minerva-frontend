@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, Image } from '@react-pdf/renderer';
-import { Api } from '../../services/Api'; // Conexión a la API
+import { Api } from '../../../services/Api'; // Conexión a la API
 import { useNavigate, useParams } from 'react-router-dom';
 import CertificateDocument from './CertificateDocument';
-import { showAlert } from '../../components/utils/Alert';
+import { showAlert } from '../../../components/utils/Alert';
 
 
 const CertGen = () => {

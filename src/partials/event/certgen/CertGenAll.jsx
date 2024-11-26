@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, Image, pdf } from '@react-pdf/renderer';
-import { Api } from '../../services/Api';
-import { showAlertTopEnd, showAlert } from '../../components/utils/Alert'; // alertas
+import { Api } from '../../../services/Api';
+import { showAlertTopEnd, showAlert } from '../../../components/utils/Alert'; // alertas
 import { useNavigate, useParams } from 'react-router-dom';
 import { saveAs } from 'file-saver';
 import CertificateDocument from './CertificateDocument';
