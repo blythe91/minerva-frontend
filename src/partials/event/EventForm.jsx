@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { showAlertTopEnd, showAlert } from '../../components/utils/Alert'; // alertas
 import { Api } from '../../services/Api'; // conexión a la API
@@ -12,31 +12,91 @@ const EventForm = () => {
   const [eventTypes, setEventTypes] = useState([]);
   const [coordinations, setCoordinations] = useState([]);
 
+  const [initialValues, setInitialValues] = useState({
+    name_event: '',
+    academic_hours: '',
+    event_type_id: '',
+    event_type_name: '',
+    event_prefix: '',
+    coordination_id: '',
+    coordination_name: '',
+    start_date: '',
+    end_date: '',
+    address: '',
+    event_modality: '',
+    date_line_text: '',
+    certificate_template_name: '',
+    event_open_text: '',
+    programatic_content: '',
+    teacher: '',
+    teacher_title: '',
+    name_signature1: '',
+    jobtitle_signature1: '',
+    image_signature1: '',
+    name_signature2: '',
+    jobtitle_signature2: '',
+    image_signature2: '',
+    name_signature3: '',
+    jobtitle_signature3: '',
+    image_signature3: '',
+  });
+
+  const [eventTypeID, setEventTypeID] = useState('');
+  const [coordinationID, setCoordinationID] = useState('');
+
+  const previousValueEventTypeID = useRef(eventTypeID);
+  const previousValueCoordinationID = useRef(coordinationID);
+  
   const [eventPrefix, setEventPrefix] = useState({
     coordinationID: '',
     currentYear: new Date().getFullYear(),
     eventTypeAbrev: ''
   });
+  // ** VALIDACIONES CON YUP **
+  const validationSchema = Yup.object({
+    name_event: Yup.string()
+      .required('El nombre del evento es requerido')
+      .max(255, 'El nombre del evento no puede exceder 255 caracteres'),
+    academic_hours: Yup.number()
+      .required('Las horas académicas son requeridas')
+      .min(0, 'Las horas académicas deben ser un número positivo'),
+    event_type_id: Yup.string().required('El ID del tipo de evento es requerido'),
+    event_type_name: Yup.string()
+      .required('El nombre del tipo de evento es requerido')
+      .max(255, 'El nombre del tipo de evento no puede exceder 255 caracteres'),
+    event_prefix: Yup.string().nullable().max(255, 'El prefijo del evento no puede exceder 255 caracteres'),
+    coordination_id: Yup.string().required('El ID de la coordinación es requerido'),
+    coordination_name: Yup.string()
+      .required('El nombre de la coordinación es requerido')
+      .max(255, 'El nombre de la coordinación no puede exceder 255 caracteres'),
+    start_date: Yup.date().required('La fecha de inicio es requerida'),
+    end_date: Yup.date()
+      .required('La fecha de finalización es requerida')
+      .min(Yup.ref('start_date'), 'La fecha de finalización debe ser igual o posterior a la de inicio'),
+    address: Yup.string().nullable().max(500, 'La dirección no puede exceder 500 caracteres'),
+    event_modality: Yup.string()
+      .required('La modalidad del evento es requerida')
+      .max(50, 'La modalidad no puede exceder 50 caracteres'),
+    date_line_text: Yup.string().nullable().max(255, 'El texto de la línea de fecha no puede exceder 255 caracteres'),
+    certificate_template_name: Yup.string()
+      .nullable()
+      .max(255, 'El nombre de la plantilla no puede exceder 255 caracteres'),
+    event_open_text: Yup.string().nullable().max(255, 'El texto de apertura no puede exceder 255 caracteres'),
+    programatic_content: Yup.string().nullable().max(5000, 'El contenido programático no puede exceder 5000 caracteres'),
+    teacher: Yup.string().nullable().max(255, 'El nombre del facilitador no puede exceder 255 caracteres'),
+    teacher_title: Yup.string().nullable().max(100, 'El título del facilitador no puede exceder 100 caracteres'),
+    name_signature1: Yup.string().nullable().max(255, 'El nombre de la firma 1 no puede exceder 255 caracteres'),
+    jobtitle_signature1: Yup.string().nullable().max(255, 'El título de la firma 1 no puede exceder 255 caracteres'),
+    image_signature1: Yup.string().nullable().max(255, 'La imagen de la firma 1 no puede exceder 255 caracteres'),
+    name_signature2: Yup.string().nullable().max(255, 'El nombre de la firma 2 no puede exceder 255 caracteres'),
+    jobtitle_signature2: Yup.string().nullable().max(255, 'El título de la firma 2 no puede exceder 255 caracteres'),
+    image_signature2: Yup.string().nullable().max(255, 'La imagen de la firma 2 no puede exceder 255 caracteres'),
+    name_signature3: Yup.string().nullable().max(255, 'El nombre de la firma 3 no puede exceder 255 caracteres'),
+    jobtitle_signature3: Yup.string().nullable().max(255, 'El título de la firma 3 no puede exceder 255 caracteres'),
+    image_signature3: Yup.string().nullable().max(255, 'La imagen de la firma 3 no puede exceder 255 caracteres'),
+  });
 
-  // ** NUEVAS FUNCIONES AGREGADAS ** //
-
-  // Actualiza el prefijo del evento en base a los cambios en coordinación o tipo de evento
-  const updateEventPrefix = (field, value) => {
-    setEventPrefix(prev => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  // Genera el prefijo del evento dinámicamente
-  const generateEventPrefix = () => {
-    return `${eventPrefix.coordinationID}-${eventPrefix.currentYear}-${eventPrefix.eventTypeAbrev}`;
-  };
-  useEffect(() => {
-    //setEventPrefix(generateEventPrefix());
-  }), [eventPrefix];
-  // ** FUNCIONES DE FETCH DE DATOS ** //
-
+  // ** FUNCIONES FETCH **
   useEffect(() => {
     const fetchEventTypes = async () => {
       const response = await Api.get('/event-types');
@@ -56,214 +116,67 @@ const EventForm = () => {
       }
     };
 
-    // Nueva función para actualizar el prefijo cuando cambian los datos de coordinación o tipo de evento
-    const updatePrefixFromInitialValues = (data) => {
-      updateEventPrefix('coordinationID', data.coordination_id || '');
-      updateEventPrefix('eventTypeAbrev', data.event_type_name ? data.event_type_name.substring(0, 3).toUpperCase() : '');
-    };
-
-    fetchEventTypes();
-    fetchCoordinations();
-
-    if (id) {
-      const fetchEvent = async () => {
+    const fetchEvent = async () => {
+      if (id) {
         setIsLoading(true);
         const response = await Api.get(`/events/${id}`);
         if (response.statusCode === 200) {
           setInitialValues(response.data);
-          updatePrefixFromInitialValues(response.data); // Actualiza el prefijo al cargar el evento
         } else {
-          showAlert('Error', 'No se pudo cargar la información del evento', 'error');
+          showAlert('Error', 'No se pudo cargar el evento', 'error');
         }
         setIsLoading(false);
-      };
+      }
+    };
 
-      fetchEvent();
-    }
+    fetchEventTypes();
+    fetchCoordinations();
+    fetchEvent();
   }, [id]);
 
-  const [initialValues, setInitialValues] = useState({
-    name_event: '',
-    academic_hours: '',
-    event_type_id: '',
-    event_type_name: '',
-    event_prefix: generateEventPrefix(),
-    coordination_id: '',
-    coordination_name: '',
-    start_date: '',
-    end_date: '',
-    address: '',
-    event_modality: '', // Agregado
-    date_line_text: '',
-    certificate_template_name: '', // Agregado
-    event_open_text: '', // Agregado
-    programatic_content: '', // Agregado
-    teacher: '', // Agregado
-    teacher_title: '', // Agregado
-  
-    // Firmas
-    name_signature1: '', 
-    jobtitle_signature1: '', 
-    image_signature1: '', 
-    name_signature2: '', 
-    jobtitle_signature2: '', 
-    image_signature2: '', 
-    name_signature3: '', 
-    jobtitle_signature3: '', 
-    image_signature3: '',
-  
-    // Archivos
-    font_file: '',
-    certificate_template: '',
-  });
+  useEffect(()=>{
 
-  // ** VALIDACIÓN DEL FORMULARIO ** //
+  },[eventTypeID,coordinationID]);
 
-  const validationSchema = Yup.object({
-    name_event: Yup.string()
-      .required('El nombre del evento es requerido')
-      .max(255, 'El nombre del evento no puede exceder 255 caracteres'),
-    academic_hours: Yup.number()
-      .required('Las horas académicas son requeridas')
-      .min(0, 'Las horas académicas deben ser un número positivo'),
-    event_type_id: Yup.string()
-      .required('El ID del tipo de evento es requerido'),
-    event_type_name: Yup.string()
-      .required('El nombre del tipo de evento es requerido')
-      .max(255, 'El nombre del tipo de evento no puede exceder 255 caracteres'),
-    event_prefix: Yup.string()
-      .nullable()
-      .max(255, 'El prefijo del evento no puede exceder 10 caracteres'),
-    coordination_id: Yup.string()
-      .required('El ID de la coordinación es requerido'),
-    coordination_name: Yup.string()
-      .required('El nombre de la coordinación es requerido')
-      .max(255, 'El nombre de la coordinación no puede exceder 255 caracteres'),
-    start_date: Yup.date()
-      .required('La fecha de inicio es requerida'),
-    end_date: Yup.date()
-      .required('La fecha de finalización es requerida'),
-    address: Yup.string()
-      .nullable()
-      .max(500, 'La dirección no puede exceder 500 caracteres'),
-  
-    // Campos adicionales
-    event_modality: Yup.string()
-      .required('La modalidad del evento es requerida')
-      .max(50, 'La modalidad no puede exceder 50 caracteres'),
-    date_line_text: Yup.string()
-      .required('El texto de la línea de fecha es obligatorio')
-      .max(255, 'El texto de la línea de fecha no puede exceder 255 caracteres'),
-    certificate_template_name: Yup.string()
-      .required('El nombre de la plantilla del certificado es obligatorio')
-      .max(255, 'El nombre no puede exceder 255 caracteres'),
-    event_open_text: Yup.string()
-      .required('El texto introductorio del evento es obligatorio')
-      .max(255, 'El texto introductorio no puede exceder 255 caracteres'),
-    programatic_content: Yup.string()
-      .nullable()
-      .max(5000, 'El contenido programático no puede exceder 5000 caracteres'),
-    teacher: Yup.string()
-      .nullable()
-      .max(255, 'El nombre del facilitador no puede exceder 255 caracteres'),
-    teacher_title: Yup.string()
-      .nullable()
-      .max(100, 'El título del facilitador no puede exceder 100 caracteres'),
-  
-    // Validación de firmas
-    // name_signature1: Yup.string()
-    //   .required('El nombre del primer firmante es obligatorio')
-    //   .max(255, 'El nombre no puede exceder 255 caracteres'),
-    // jobtitle_signature1: Yup.string()
-    //   .required('El cargo del primer firmante es obligatorio')
-    //   .max(255, 'El cargo no puede exceder 255 caracteres'),
-    // image_signature1: Yup.string()
-    //   .required('El nombre de la imagen de la firma del primer firmante es obligatoria')
-    //   .max(255, 'El nombre de la imagen de la firma del primer firmante no puede exceder 255 caracteres'),
-  
-    // name_signature2: Yup.string()
-    //   .required('El nombre del segundo firmante es obligatorio')
-    //   .max(255, 'El nombre no puede exceder 255 caracteres'),
-    // jobtitle_signature2: Yup.string()
-    //   .required('El cargo del segundo firmante es obligatorio')
-    //   .max(255, 'El cargo no puede exceder 255 caracteres'),
-    // image_signature2: Yup.string()
-    //   .required('El nombre de la imagen de la firma del segundo firmante es obligatoria')
-    //   .max(255, 'El nombre de la imagen de la firma del segundo firmante no puede exceder 255 caracteres'),
-  
-    // name_signature3: Yup.string()
-    //   .required('El nombre del tercer firmante es obligatorio')
-    //   .max(255, 'El nombre no puede exceder 255 caracteres'),
-    // jobtitle_signature3: Yup.string()
-    //   .required('El cargo del tercer firmante es obligatorio')
-    //   .max(255, 'El cargo no puede exceder 255 caracteres'),
-    // image_signature3: Yup.string()
-    //   .required('El nombre de la imagen de la firma del tercer firmante es obligatoria')
-    //   .max(255, 'El nombre de la imagen de la firma del tercer firmante no puede exceder 255 caracteres'),
-  
-    // Archivos de fuente y plantilla
-    font_file: Yup.mixed()
-      .nullable()
-      .test('fileType', 'El archivo debe ser un archivo de fuente (ttf, otf)', (value) => {
-        if (!value) return true;
-        const allowedTypes = ['font/ttf', 'font/otf'];
-        return allowedTypes.includes(value.type);
-      })
-      .test('fileSize', 'El archivo no puede exceder los 10 MB', (value) => !value || value.size <= 10000000),
-    certificate_template: Yup.mixed()
-      .nullable()
-      .test('fileType', 'La plantilla debe ser una imagen (jpeg, png)', (value) => {
-        if (!value) return true;
-        const allowedTypes = ['image/jpeg', 'image/png'];
-        return allowedTypes.includes(value.type);
-      })
-      .test('fileSize', 'La imagen no puede exceder los 2 MB', (value) => !value || value.size <= 2000000),
-  });
-
-  // ** FUNCIONES DE SUBMIT Y NAVEGACIÓN ** //
-
+  const generateEventPrefix = () => {
+    return `${eventPrefix.coordinationID}-${eventPrefix.currentYear}-${eventPrefix.eventTypeAbrev}`;
+  };
+  const updateEventPrefix = (field, value) => {
+    setEventPrefix(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+  const updatePrefixFromInitialValues = (data) => {
+    updateEventPrefix('coordinationID', data.coordination_id || '');
+    updateEventPrefix('eventTypeAbrev', data.event_type_name ? data.event_type_name.substring(0, 3).toUpperCase() : '');
+  };
+  // ** SUBMIT DEL FORMULARIO **
   const handleSubmit = async (values) => {
-    const formData = new FormData();
-
-    // Iterar y añadir campos al FormData
-    Object.keys(values).forEach((key) => {
-      if (key === 'font_file' || key === 'certificate_template') {
-        if (values[key]) formData.append(key, values[key]);
-      } else {
-        formData.append(key, values[key]);
-      }
-    });
-
     setIsLoading(true);
-
     try {
-      let response;
-      if (id) {
-        response = await Api.put(`/events/${id}`, values);
-      } else {
-        response = await Api.post('/events', values);
-      }
+      const response = id
+        ? await Api.put(`/events/${id}`, values)
+        : await Api.post('/events', values);
 
-      if (response.statusCode === 200 || response.statusCode === 201) {
-        showAlert('Éxito', id ? 'Evento actualizado correctamente' : 'Evento agregado correctamente', 'success');
+      if ([200, 201].includes(response.statusCode)) {
+        showAlert('Éxito', id ? 'Evento actualizado' : 'Evento creado', 'success');
         navigate('/events');
-      } else if (response.statusCode === 422 && response.data.errors) {
-        Object.entries(response.data.errors).forEach(([field, messages]) => {
-          showAlert('Error', `${field}: ${messages.join(' ')}`, 'error');
-        });
-      } else {
-        showAlert('Error', `(${response.statusCode}) ${response.data.error}`, 'error');
+
+      } else {        
+        if (response.statusCode === 422 && response.data.errors) {
+          Object.entries(response.data.errors).forEach(([field, messages]) => {
+            showAlert('Error', `${field}: ${messages.join(' ')}`, 'error');
+          });
+        }
       }
     } catch {
-      showAlert('Error', 'Hubo un problema al guardar los datos', 'error');
+      showAlert('Error', 'Hubo un problema al guardar el evento', 'error');
     }
-
     setIsLoading(false);
   };
 
   const handleBack = () => navigate(-1);
-
-
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
