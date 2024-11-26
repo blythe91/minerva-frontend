@@ -37,39 +37,42 @@ const ParticipantForm = () => {
       .nullable()
       .max(50, 'El segundo apellido no puede exceder 50 caracteres'),
     cedula: Yup.string()
-      .required('La cédula es requerida')
-      .matches(/^[0-9]+$/, 'La cédula debe ser un número válido'),
+      .required('La cédula es requerida'),
+      // .matches(/^[0-9]+$/, 'La cédula debe ser un número válido'),
     celular: Yup.string()
-      .required('El celular es requerido')
+      .nullable() // Se hace opcional según el modelo
       .matches(/^[0-9]+$/, 'Debe ser un número válido'),
     email: Yup.string()
       .email('Debe ser un email válido')
-      .required('El email es requerido'),
+      .nullable() // Se hace opcional según el modelo
+      .max(255, 'El correo electrónico no puede exceder 255 caracteres'),
     nacionalidad: Yup.string()
-      .required('La nacionalidad es requerida')
+      .nullable() // Se hace opcional según el modelo
       .max(50, 'La nacionalidad no puede exceder 50 caracteres'),
     pais: Yup.string()
-      .required('El país es requerido')
+      .nullable() // Se hace opcional según el modelo
       .max(50, 'El país no puede exceder 50 caracteres'),
     estado: Yup.string()
-      .required('El estado es requerido')
+      .nullable() // Se hace opcional según el modelo
       .max(50, 'El estado no puede exceder 50 caracteres'),
     ciudad: Yup.string()
-      .required('La ciudad es requerida')
+      .nullable() // Se hace opcional según el modelo
       .max(50, 'La ciudad no puede exceder 50 caracteres'),
     direccion: Yup.string()
-      .required('La dirección es requerida')
+      .nullable() // Se hace opcional según el modelo
       .max(255, 'La dirección no puede exceder 255 caracteres'),
     codigo_postal: Yup.string()
-      .required('El código postal es requerido')
-      .matches(/^[0-9]+$/, 'Debe ser un código postal válido'),
-    organizacion: Yup.string()
-      .required('La organización es requerida')
-      .max(255, 'La organización no puede exceder 255 caracteres'),
+      .nullable() // Se hace opcional según el modelo
+      .max(20, 'El código postal no puede exceder 20 caracteres')
+      .matches(/^[0-9a-zA-Z]+$/, 'Debe ser un código postal válido'), // Permite letras y números
+    organismo: Yup.string() // Se utiliza 'organismo' en lugar de 'organismo'
+      .nullable() // Se hace opcional según el modelo
+      .max(255, 'El organismo no puede exceder 255 caracteres'),
     cargo: Yup.string()
-      .required('El cargo es requerido')
-      .max(255, 'El cargo no puede exceder 255 caracteres'),
+      .nullable() // Se hace opcional según el modelo
+      .max(100, 'El cargo no puede exceder 100 caracteres'),
   });
+  
 
   // Si hay un ID en la URL, cargamos los datos del participante para edición
   useEffect(() => {
@@ -104,8 +107,8 @@ const ParticipantForm = () => {
     ciudad: '',
     direccion: '',
     codigo_postal: '',
-    organizacion: '', // Nuevo campo
-    cargo: '', // Nuevo campo
+    organismo: '', 
+    cargo: '', 
   });
 
   // Función para manejar la creación o edición
@@ -189,9 +192,7 @@ const ParticipantForm = () => {
                     <Field 
                         name="cedula" 
                         className="w-full p-2 border rounded" 
-                        type="text" 
-                        pattern="[0-9]*" 
-                        inputMode="numeric" 
+                        type="text"  
                     />
                     <ErrorMessage name="cedula" component="div" className="text-red-500 text-sm" />
                     </div>
@@ -260,8 +261,7 @@ const ParticipantForm = () => {
                     <Field 
                         name="codigo_postal" 
                         className="w-full p-2 border rounded" 
-                        type="text" 
-                        pattern="[0-9]*" 
+                        type="text"                         
                         inputMode="numeric" 
                     />
                     <ErrorMessage name="codigo_postal" component="div" className="text-red-500 text-sm" />
@@ -274,9 +274,9 @@ const ParticipantForm = () => {
                 <h3 className="text-2xl font-semibold mb-4">Información Adicional</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                    <label className="block mb-2">Organización</label>
-                    <Field name="organizacion" className="w-full p-2 border rounded" />
-                    <ErrorMessage name="organizacion" component="div" className="text-red-500 text-sm" />
+                    <label className="block mb-2">Organismo</label>
+                    <Field name="organismo" className="w-full p-2 border rounded" />
+                    <ErrorMessage name="organismo" component="div" className="text-red-500 text-sm" />
                     </div>
                     <div>
                     <label className="block mb-2">Cargo</label>

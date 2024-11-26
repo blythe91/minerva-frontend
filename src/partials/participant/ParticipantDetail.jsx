@@ -92,7 +92,7 @@ const ParticipantDetail = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
-          <p><strong>Organización:</strong> {participant.organizacion}</p>
+          <p><strong>Organismo:</strong> {participant.organismo}</p>
           <p><strong>Cargo:</strong> {participant.cargo}</p>
         </div>
       </div>
