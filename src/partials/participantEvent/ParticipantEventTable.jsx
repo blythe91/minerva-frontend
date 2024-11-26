@@ -38,7 +38,6 @@ const ParticipantEventTable = () => {
       item.pri_nom,
       item.pri_ape,
       item.name_participant_type,
-      item.name_certificate_type,
       item.name_event,
       item.event_prefix,
     ];
@@ -120,20 +119,7 @@ const ParticipantEventTable = () => {
       ),
     },
     {
-      name: 'Tipo de Certificado',
-      selector: row => row.name_certificate_type,
-      sortable: true,
-      cell: row => (
-        <button
-          className="text-blue-500 hover:underline text-left"
-          onClick={() => handleCertificateTypeClick(row.certificate_type_id)}
-        >
-          {row.name_certificate_type}
-        </button>
-      ),
-    },
-    {
-      name: 'Evento',
+      name: 'Nombre de Evento',
       selector: row => row.name_event,
       sortable: true,
       cell: row => (

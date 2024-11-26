@@ -54,7 +54,6 @@ const EventCertificates = () => {
       item.pri_nom,
       item.pri_ape,
       item.name_participant_type,
-      item.name_certificate_type,
       item.name_event,
       item.certificate_code,
     ];
@@ -102,11 +101,6 @@ const EventCertificates = () => {
     {
       name: 'Tipo de Participante',
       selector: row => row.name_participant_type,
-      sortable: true,
-    },
-    {
-      name: 'Tipo de Certificado',
-      selector: row => row.name_certificate_type,
       sortable: true,
     },
     {

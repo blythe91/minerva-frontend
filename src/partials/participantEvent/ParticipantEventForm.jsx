@@ -20,13 +20,11 @@ const ParticipantEventForm = () => {
     event_type_name: "", // Nuevo campo agregado
     coordination_name: "", // Campo de coordinación agregado
     participant_type_id: "",
-    certificate_type_id: "",
   });
 
   const [participants, setParticipants] = useState([]);
   const [events, setEvents] = useState([]);
   const [participantTypes, setParticipantTypes] = useState([]);
-  const [certificateTypes, setCertificateTypes] = useState([]);
 
   const [errors, setErrors] = useState({});
 
@@ -34,17 +32,15 @@ const ParticipantEventForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [participantResponse, eventResponse, participantTypeResponse, certificateTypeResponse] = await Promise.all([
+        const [participantResponse, eventResponse, participantTypeResponse] = await Promise.all([
           Api.get("/participants"),
           Api.get("/events"),
           Api.get("/participant-types"),
-          Api.get("/certificate-types"),
         ]);
 
         setParticipants(participantResponse.data);
         setEvents(eventResponse.data);
         setParticipantTypes(participantTypeResponse.data);
-        setCertificateTypes(certificateTypeResponse.data);
         
         // Load existing data for editing
         if (id) {
@@ -107,7 +103,6 @@ const ParticipantEventForm = () => {
         if (!participantEvent.event_prefix) newErrors.event_prefix = "Seleccione un evento.";
         if (!participantEvent.event_type_name) newErrors.event_type_name = "El tipo de evento es requerido.";
         if (!participantEvent.participant_type_id) newErrors.participant_type_id = "Seleccione un tipo de participante.";
-        if (!participantEvent.certificate_type_id) newErrors.certificate_type_id = "Seleccione un tipo de certificado.";
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -131,8 +126,6 @@ const ParticipantEventForm = () => {
             event_prefix: participantEvent.event_prefix,
             participant_type_id: String(participantEvent.participant_type_id || ""),
             name_participant_type: participantTypes.find(pt => pt._id === participantEvent.participant_type_id)?.name_participant_type,
-            certificate_type_id: String(participantEvent.certificate_type_id || ""),
-            name_certificate_type: certificateTypes.find(ct => ct._id === participantEvent.certificate_type_id)?.name_certificate_type,
         };
 
         try {
@@ -332,24 +325,6 @@ const ParticipantEventForm = () => {
           ))}
         </select>
         {errors.participant_type_id && <p className="text-red-500 text-sm">{errors.participant_type_id}</p>}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium">Tipo de Certificado</label>
-        <select
-          name="certificate_type_id"
-          value={participantEvent.certificate_type_id}
-          onChange={handleInputChange}
-          className="form-select"
-        >
-          <option value="">Seleccione un tipo de certificado</option>
-          {certificateTypes.map((ct) => (
-            <option key={ct._id} value={ct._id}>
-              {ct.name_certificate_type}
-            </option>
-          ))}
-        </select>
-        {errors.certificate_type_id && <p className="text-red-500 text-sm">{errors.certificate_type_id}</p>}
       </div>
     </div>
 

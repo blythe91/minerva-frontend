@@ -12,13 +12,11 @@ function UpdateFields() {
     participants: 0,
     events: 0,
     participantTypes: 0,
-    certificateTypes: 0,
   });
   const [participantEventsData, setParticipantEventsData] = useState([]);
   const [participantsData, setParticipantsData] = useState([]);
   const [eventsData, setEventsData] = useState([]);
   const [participantTypesData, setParticipantTypesData] = useState([]);
-  const [certificateTypesData, setCertificateTypesData] = useState([]);
   const [discrepancies, setDiscrepancies] = useState([]);
   const [showDiscrepancies, setShowDiscrepancies] = useState(false);
 
@@ -34,32 +32,28 @@ function UpdateFields() {
         setProgress(20);
 
         // Consultar todas las tablas relacionadas
-        const [participantEventsRes, participantsRes, eventsRes, participantTypesRes, certificateTypesRes] = await Promise.all([
+        const [participantEventsRes, participantsRes, eventsRes, participantTypesRes, ] = await Promise.all([
           Api.get('/participant-events'),
           Api.get('/participants'),
           Api.get('/events'),
           Api.get('/participant-types'),
-          Api.get('/certificate-types'),
         ]);
 
         const participantEvents = participantEventsRes.data;
         const participants = participantsRes.data;
         const events = eventsRes.data;
         const participantTypes = participantTypesRes.data;
-        const certificateTypes = certificateTypesRes.data;
 
         setParticipantEventsData(participantEvents);
         setParticipantsData(participants);
         setEventsData(events);
         setParticipantTypesData(participantTypes);
-        setCertificateTypesData(certificateTypes);
 
         setRecordCounts({
           participantEvents: participantEvents.length,
           participants: participants.length,
           events: events.length,
           participantTypes: participantTypes.length,
-          certificateTypes: certificateTypes.length,
         });
 
         setCurrentStage('Consulta completada');
@@ -82,7 +76,6 @@ function UpdateFields() {
       const participant = participantsData.find(p => p._id === event.participant_id);
       const eventData = eventsData.find(e => e._id === event.event_id);
       const participantType = participantTypesData.find(pt => pt._id === event.participant_type_id);
-      const certificateType = certificateTypesData.find(ct => ct._id === event.certificate_type_id);
 
       const discrepancy = {
         participant_id: event.participant_id,
@@ -90,7 +83,6 @@ function UpdateFields() {
         participant_name: `${participant?.pri_nom} ${participant?.seg_nom} ${participant?.pri_ape} ${participant?.seg_ape}`,
         event_name: event.name_event,
         participant_type_id: event.participant_type_id,
-        certificate_type_id: event.certificate_type_id,
         discrepancies: [],
       };
 
@@ -141,13 +133,6 @@ function UpdateFields() {
           correct: participantType.name_participant_type,
         });
       }
-      if (certificateType && event.name_certificate_type !== certificateType.name_certificate_type) {
-        discrepancy.discrepancies.push({
-          field: 'Tipo de Certificado',
-          current: event.name_certificate_type,
-          correct: certificateType.name_certificate_type,
-        });
-      }
 
       if (discrepancy.discrepancies.length > 0) {
         discrepanciesFound.push(discrepancy);
@@ -157,130 +142,6 @@ function UpdateFields() {
     setDiscrepancies(discrepanciesFound);
     setShowDiscrepancies(true);
   };
-
-
-//   const updateDiscrepancies = () => {
-//     setIsLoading(true);
-//     setCurrentStage('Preparando datos para actualización...');
-  
-//     const discrepantRecords = discrepancies.filter((discrepancy) => {
-//       return discrepancy.discrepancies && discrepancy.discrepancies.length > 0;
-//     });
-  
-//     let totalRecords = discrepantRecords.length;
-//     let processedRecords = 0;
-//     let successes = 0;
-//     let failures = 0;
-//     let results = [];
-  
-//     if (totalRecords === 0) {
-//       setCurrentStage('No se encontraron discrepancias para actualizar');
-//       setIsLoading(false);
-//       return;
-//     }
-  
-//     for (let i = 0; i < discrepantRecords.length; i++) {
-//       const discrepancy = discrepantRecords[i];
-//       const participantEvent = participantEventsData.find(
-//         (event) => event.participant_id === discrepancy.participant_id && event.event_id === discrepancy.event_id
-//       );
-  
-//       if (!participantEvent) continue;
-  
-//       let updateRecord = { ...participantEvent };
-  
-//       const participantData = participantsData.find(p => p._id === discrepancy.participant_id);
-//       const eventData = eventsData.find(e => e._id === discrepancy.event_id);
-//       const participantTypeData = participantTypesData.find(pt => pt._id === discrepancy.participant_type_id);
-//       const certificateTypeData = certificateTypesData.find(ct => ct._id === discrepancy.certificate_type_id);
-
-//     console.log("////////////////////////////////////////////////////");
-//     console.log("///////////////certificateTypesData//////////////////");
-//     console.log(certificateTypesData);
-//     console.log("///////////////id de discrepancia://////////////////");
-//     console.log(discrepancy.certificate_type_id);
-//     console.log("////////////////////////////////////////////////////");
-
-//     console.log("////////////////////////////////////////////////////");
-//     console.log("///////////////participantTypesData//////////////////");
-//     console.log(participantTypesData);
-//     console.log("///////////////id de discrepancia://////////////////");
-//     console.log(discrepancy.participant_type_id);
-//     console.log("////////////////////////////////////////////////////");
-  
-//       for (const field of discrepancy.discrepancies) {
-//         if (field.field === 'Nombre/Apellidos/Correo') {
-//           updateRecord.pri_nom = participantData?.pri_nom || updateRecord.pri_nom;
-//           updateRecord.seg_nom = participantData?.seg_nom || updateRecord.seg_nom;
-//           updateRecord.pri_ape = participantData?.pri_ape || updateRecord.pri_ape;
-//           updateRecord.seg_ape = participantData?.seg_ape || updateRecord.seg_ape;
-//           updateRecord.email = participantData?.email || updateRecord.email;
-//         }
-  
-//         if (field.field === 'Evento') {
-//           updateRecord.name_event = eventData?.name_event || updateRecord.name_event;
-//         }
-  
-//         if (field.field === 'Prefijo del Evento') {
-//           updateRecord.event_prefix = eventData?.event_prefix || updateRecord.event_prefix;
-//         }
-  
-//         if (field.field === 'Nombre de Coordinación') {
-//           updateRecord.coordination_name = eventData?.coordination_name || updateRecord.coordination_name;
-//         }
-  
-//         if (field.field === 'Tipo de Evento') {
-//           updateRecord.event_type_name = eventData?.event_type_name || updateRecord.event_type_name;
-//         }
-  
-//         if (field.field === 'Tipo de Participante') {
-//             updateRecord.participant_type_id = discrepancy.participant_type_id || updateRecord.participant_type_id;
-//             updateRecord.name_participant_type = participantTypeData?.name_participant_type || updateRecord.name_participant_type;
-//             console.log("////////////////////////////////////////////////////");
-//             console.log("////////////////////////////////////////////////////");
-//             console.log("registro a actualizar tipo particip.: "+updateRecord.name_participant_type+"; nuevo valor: "+participantTypeData?.name_participant_type);
-//             console.log("////////////////////////////////////////////////////");
-//             console.log("////////////////////////////////////////////////////");
-//           }
-  
-//         if (field.field === 'Tipo de Certificado') {
-//           updateRecord.certificate_type_id = discrepancy.certificate_type_id || updateRecord.certificate_type_id;
-//           updateRecord.name_certificate_type = certificateTypeData?.name_certificate_type || updateRecord.name_certificate_type;
-
-//           console.log("////////////////////////////////////////////////////");
-//             console.log("////////////////////////////////////////////////////");
-//             console.log("registro a actualizar tipo cert: "+updateRecord.name_certificate_type+"; nuevo valor: "+certificateTypeData?.name_certificate_type);
-//             console.log("////////////////////////////////////////////////////");
-//             console.log("////////////////////////////////////////////////////");
-//         }
-  
-//         updateRecord.cedula = String(participantData?.cedula || updateRecord.cedula);
-//       }
-  
-//       // Intento de actualización
-//       try {
-//         // Ejecución directa de actualización sin async/await
-//         Api.put(`/participant-events/${participantEvent._id}`, updateRecord)
-        
-//         successes++;
-//         results.push(`Registro actualizado: ${participantEvent._id}`);
-//         setCurrentStage(`Actualizando datos (${i + 1} de ${totalRecords})`);
-//       } catch (error) {
-//         console.error('Error al actualizar registro:', participantEvent._id, error);
-//         failures++;
-//         results.push(`Error al actualizar registro: ${participantEvent._id}`);
-//       }
-  
-//       processedRecords++;
-//     }
-  
-//     // Actualizar estado y finalizar
-//     setUpdateResults(results);
-//     setSuccessCount(successes);
-//     setFailCount(failures);
-//     setCurrentStage('Actualización completada');
-//     setIsLoading(false);
-//   };
 
 const updateDiscrepancies = async () => {
   try {
@@ -321,9 +182,6 @@ const updateDiscrepancies = async () => {
           const eventData = eventsData.find((e) => e._id === discrepancy.event_id);
           const participantTypeData = participantTypesData.find(
               (pt) => pt._id === discrepancy.participant_type_id
-          );
-          const certificateTypeData = certificateTypesData.find(
-              (ct) => ct._id === discrepancy.certificate_type_id
           );
 
           // Actualizar todos los campos
@@ -368,14 +226,6 @@ const updateDiscrepancies = async () => {
                   ...updateRecord,
                   participant_type_id: discrepancy.participant_type_id,
                   name_participant_type: participantTypeData.name_participant_type,
-              };
-          }
-
-          if (certificateTypeData) {
-              updateRecord = {
-                  ...updateRecord,
-                  certificate_type_id: discrepancy.certificate_type_id,
-                  name_certificate_type: certificateTypeData.name_certificate_type,
               };
           }
 
@@ -490,10 +340,6 @@ const updateDiscrepancies = async () => {
           <li className="flex justify-between">
             <span>Participant Types:</span>
             <span>{recordCounts.participantTypes}</span>
-          </li>
-          <li className="flex justify-between">
-            <span>Certificate Types:</span>
-            <span>{recordCounts.certificateTypes}</span>
           </li>
         </ul>
       </div>
