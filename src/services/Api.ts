@@ -1,93 +1,54 @@
 export class Api {
     static baseUrl = "http://127.0.0.1:8000/api";
 
-    // Método para POST (crear un nuevo recurso)
+
+    // Método para POST (crear un nuevo recurso) usando solo application/json
     static async post<T>(url: string, data: any): Promise<any> {
-        
-        
-        const formData = new FormData();
-        var e=0;
-        Object.keys(data).forEach((key) => {
-            if (key === 'font_file' || key === 'certificate_template') {
-              // Solo añadir los archivos si existen
-              e=1;
+        try {
+            const response = await fetch(`${Api.baseUrl}${url}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data), // Convertir los datos a JSON
+            });
 
-              if (data[key]) {
-                formData.append(key, data[key]);
-                console.log(key + ':', data[key]+" formdata.");
-              }
-            } else {
-              formData.append(key, data[key]);
-              console.log(key + ':', data[key]+" json");
-            }
-          });
-        const isFormData = data instanceof FormData;
+            const dataResponse = await response.json();
 
-        if (!e) {
-            console.log("detectó el formData");
-        } else {
-            console.log("detectó JSON");
+            return {
+                statusCode: response.status,
+                data: dataResponse,
+            };
+        } catch (error) {
+            console.error("Error en el método POST:", error);
+            throw error;
         }
-
-        const response = await fetch(`${Api.baseUrl}${url}`, {
-        method: "POST",
-        // headers: !e
-        //     ? { "Content-Type": "application/json" } // Solo si NO es FormData
-        //     : { "Content-Type": "multipart/form-data" }, // header si es FormData
-        body: e ? data : JSON.stringify(data), // Si es FormData, usarlo tal cual
-        });
-
-        const dataResponse = await response.json();
-
-        return {
-        statusCode: response.status,
-        data: dataResponse,
-        };
     }
 
-   
-
-    // Método para PUT (actualizar un recurso existente completamente)
+    // Método para PUT (actualizar un recurso existente completamente) usando solo application/json
     static async put<T>(url: string, data: any): Promise<any> {
+        try {
+            const response = await fetch(`${Api.baseUrl}${url}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data), // Convertir los datos a JSON
+            });
 
-        const formData = new FormData();
-        var e=0;
-        Object.keys(data).forEach((key) => {
-            if (key === 'font_file' || key === 'certificate_template') {
-              // Solo añadir los archivos si existen
-              e=1;
+            const dataResponse = await response.json();
 
-              if (data[key]) {
-                formData.append(key, data[key]);
-                console.log(key + ':', data[key]);
-              }
-            } else {
-              formData.append(key, data[key]);
-              console.log(key + ':', data[key]);
-            }
-          });
-        const isFormData = data instanceof FormData;
-
-        if (!e) {
-            console.log("detectó el JSON");
-        } else {
-            console.log("detectó formData");
+            return {
+                statusCode: response.status,
+                data: dataResponse,
+            };
+        } catch (error) {
+            console.error("Error en el método PUT:", error);
+            throw error;
         }
-        const response = await fetch(`${Api.baseUrl}${url}`, {
-        method: "PUT",
-        headers: !e
-            ? { "Content-Type": "application/json" }
-            : { "Content-Type": "multipart/form-data" },
-        body: e ? data : JSON.stringify(data),
-        });
-
-        const dataResponse = await response.json();
-
-        return {
-        statusCode: response.status,
-        data: dataResponse,
-        };
     }
+
+
 
      // Método para GET (obtener datos)
      static async get<T>(url: string): Promise<any> {
@@ -142,4 +103,89 @@ export class Api {
             data: dataResponse,
         };
     }
+
+        // // Método para POST (crear un nuevo recurso)
+    // static async post<T>(url: string, data: any): Promise<any> {
+        
+        
+    //     const formData = new FormData();
+    //     var e=0;
+    //     Object.keys(data).forEach((key) => {
+    //         if (key === 'font_file' || key === 'certificate_template') {
+    //           // Solo añadir los archivos si existen
+    //           e=1;
+
+    //           if (data[key]) {
+    //             formData.append(key, data[key]);
+    //             console.log(key + ':', data[key]+" formdata.");
+    //           }
+    //         } else {
+    //           formData.append(key, data[key]);
+    //           console.log(key + ':', data[key]+" json");
+    //         }
+    //       });
+    //     const isFormData = data instanceof FormData;
+
+    //     if (!e) {
+    //         console.log("detectó el formData");
+    //     } else {
+    //         console.log("detectó JSON");
+    //     }
+
+    //     const response = await fetch(`${Api.baseUrl}${url}`, {
+    //     method: "POST",
+    //     // headers: !e
+    //     //     ? { "Content-Type": "application/json" } // Solo si NO es FormData
+    //     //     : { "Content-Type": "multipart/form-data" }, // header si es FormData
+    //     body: e ? data : JSON.stringify(data), // Si es FormData, usarlo tal cual
+    //     });
+
+    //     const dataResponse = await response.json();
+
+    //     return {
+    //     statusCode: response.status,
+    //     data: dataResponse,
+    //     };
+    // }
+    // // Método para PUT (actualizar un recurso existente completamente)
+    // static async put<T>(url: string, data: any): Promise<any> {
+
+    //     const formData = new FormData();
+    //     var e=0;
+    //     Object.keys(data).forEach((key) => {
+    //         if (key === 'font_file' || key === 'certificate_template') {
+    //           // Solo añadir los archivos si existen
+    //           e=1;
+
+    //           if (data[key]) {
+    //             formData.append(key, data[key]);
+    //             console.log(key + ':', data[key]);
+    //           }
+    //         } else {
+    //           formData.append(key, data[key]);
+    //           console.log(key + ':', data[key]);
+    //         }
+    //       });
+    //     const isFormData = data instanceof FormData;
+
+    //     if (!e) {
+    //         console.log("detectó el JSON");
+    //     } else {
+    //         console.log("detectó formData");
+    //     }
+    //     const response = await fetch(`${Api.baseUrl}${url}`, {
+    //     method: "PUT",
+    //     headers: !e
+    //         ? { "Content-Type": "application/json" }
+    //         : { "Content-Type": "multipart/form-data" },
+    //     body: e ? data : JSON.stringify(data),
+    //     });
+
+    //     const dataResponse = await response.json();
+
+    //     return {
+    //     statusCode: response.status,
+    //     data: dataResponse,
+    //     };
+    // }
 }
