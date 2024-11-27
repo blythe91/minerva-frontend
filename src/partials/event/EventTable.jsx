@@ -34,10 +34,10 @@ const EventTable = () => {
   // Función para filtrar los elementos
   const filteredItems = events.filter(item => {
     const valuesToFilter = [
+      item._id,
       item.name_event,
       item.start_date,
       item.end_date,
-      item.event_type_name,
       item.coordination_name, // Ahora filtramos por nombre de coordinación en lugar de dirección
     ];
 
@@ -48,6 +48,11 @@ const EventTable = () => {
 
   // Columnas de la tabla
   const columns = [
+    {
+      name: 'ID de Evento',
+      selector: row => row._id,
+      sortable: true,
+    },
     {
       name: 'Nombre del Evento',
       selector: row => row.name_event,
@@ -74,10 +79,6 @@ const EventTable = () => {
     {
       name: 'Coordinación Encargada', // Anteriormente era 'Tipo de Evento'
       selector: row => row.coordination_name, // Mostrar nombre de coordinación
-    },
-    {
-      name: 'Tipo de Evento', // Anteriormente era 'Dirección'
-      selector: row => row.event_type_name, // Mostrar tipo de evento aquí
     },
   ];
 
