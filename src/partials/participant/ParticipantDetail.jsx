@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { showAlertTopEnd } from '../../components/utils/Alert'; //alertas
+import { showAlertTopEnd, showAlert } from '../../components/utils/Alert'; //alertas
 import { Api } from '../../services/Api'; //conexión a la API
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -40,7 +40,7 @@ const ParticipantDetail = () => {
     const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este participante?');
     if (confirmDelete) {
       try {
-        const response = await Api.delete(`/participants/${participant._id}`); // Ajusta el endpoint según sea necesario
+        const response = await Api.delete(`/participants/${participant._id}`); // Ajusta el endpoint según sea necesario 
         if (response.statusCode === 200) {
           showAlert('Éxito', 'Participante eliminado correctamente', 'success');
           navigate('/participants'); // Redirigir a la lista de participantes

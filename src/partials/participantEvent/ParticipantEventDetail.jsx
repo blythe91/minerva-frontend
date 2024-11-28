@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { showAlertTopEnd } from '../../components/utils/Alert'; // alertas
+import { showAlertTopEnd, showAlert } from '../../components/utils/Alert'; // alertas
 import { Api } from '../../services/Api'; // conexión a la API
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaFilePdf } from 'react-icons/fa'; // Importar icono de Adobe

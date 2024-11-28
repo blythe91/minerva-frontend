@@ -81,7 +81,7 @@ const ParticipantEventForm = () => {
   };
 
   const handleEventChange = (e) => {
-    const selectedEvent = events.find((ev) => ev.event_prefix === e.target.value);
+    const selectedEvent = events.find((ev) => ev.name_event === e.target.value);
     if (selectedEvent) {
       setParticipantEvent({
         ...participantEvent,
@@ -256,29 +256,29 @@ const ParticipantEventForm = () => {
     {/* Sección Datos del Evento */}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       <div>
-        <label className="block text-sm font-medium">Prefijo del Evento</label>
+        <label className="block text-sm font-medium">Nombre del Evento</label>
         <select
-          name="event_prefix"
-          value={participantEvent.event_prefix}
+          name="name_event"
+          value={participantEvent.name_event}
           onChange={handleEventChange}
           className="form-select"
         >
           <option value="">Seleccione un evento</option>
           {events.map((e) => (
-            <option key={e._id} value={e.event_prefix}>
-              {e.event_prefix}
+            <option key={e._id} value={e.name_event}>
+              {e.name_event}
             </option>
           ))}
         </select>
-        {errors.event_prefix && <p className="text-red-500 text-sm">{errors.event_prefix}</p>}
+        {errors.name_event && <p className="text-red-500 text-sm">{errors.name_event}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Nombre del Evento</label>
+        <label className="block text-sm font-medium">Prefijo del Evento</label>
         <input
           type="text"
-          name="name_event"
-          value={participantEvent.name_event}
+          name="event_prefix"
+          value={participantEvent.event_prefix}
           readOnly
           className="form-input"
         />

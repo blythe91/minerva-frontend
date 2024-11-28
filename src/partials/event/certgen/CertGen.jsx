@@ -21,6 +21,7 @@ const CertGen = () => {
   const [certificateCode, setCertificateCode] = useState(null); // Nuevo estado para el código del certificado
   const [Correlative, setNewCorrelative] = useState(null);
 
+
   const fetchParticipantEvent = async () => {
     try {
       const response = await Api.get(`/participant-events/${id}`); // Llamada a la API para participante
@@ -44,6 +45,9 @@ const CertGen = () => {
     setIsLoading(false);
   };
   
+  function CorrelativeFormat(num, lenght) {
+    return num.toString().padStart(lenght, '0');
+  }
   const generateCertificateCode = async () => {
     try {
       if (!eventDetails) return;
@@ -69,14 +73,14 @@ const CertGen = () => {
 
         // Generar el nuevo código de certificado
         const newCorrelative = currentCorrelative + 1;
-        const code = `${event_prefix}-${newCorrelative}`;
+        const code = `${event_prefix}-${CorrelativeFormat(newCorrelative,4)}`;
         setCertificateCode(code);
-        setNewCorrelative(newCorrelative);
+        setNewCorrelative(CorrelativeFormat(newCorrelative,4));
         console.log("correlativo actual:"+correlativeResponse.data.last_correlative);
-        console.log("correlativo nuevo:"+newCorrelative);
+        console.log("correlativo nuevo:"+CorrelativeFormat(newCorrelative,4));
         console.log("codigo de certificado nuevo desde PE:"+participantEvent.certificate_code);
         
-        return newCorrelative; // Retornar el nuevo correlativo para actualizarlo después
+        return CorrelativeFormat(newCorrelative,4); // Retornar el nuevo correlativo para actualizarlo después
       } else {
         alert('Error al obtener el correlativo.');
       }
@@ -130,6 +134,8 @@ const CertGen = () => {
             
             
             console.log('Correlativo actualizado correctamente en ParticipantEvent. '+participantEvent.certificate_code);
+
+            // navigate(-1);
           } else {
             alert('Error al actualizar el correlativo en Participant Event.');
           }
