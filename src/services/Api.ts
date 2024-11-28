@@ -24,7 +24,28 @@ export class Api {
             throw error;
         }
     }
-
+    // Método para POST con array
+    static async postArray<T>(url: string, data: T[]): Promise<any> {
+        try {
+            const response = await fetch(`${Api.baseUrl}${url}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data), // Convertir los datos a JSON
+            });
+    
+            const dataResponse = await response.json();
+    
+            return {
+                statusCode: response.status,
+                data: dataResponse,
+            };
+        } catch (error) {
+            console.error("Error en el método POST:", error);
+            throw error;
+        }
+    }
     // Método para PUT (actualizar un recurso existente completamente) usando solo application/json
     static async put<T>(url: string, data: any): Promise<any> {
         try {
@@ -47,8 +68,28 @@ export class Api {
             throw error;
         }
     }
-
-
+    //Método para PUT con array
+    static async putArray<T>(url: string, data: T[]): Promise<any> {
+        try {
+            const response = await fetch(`${Api.baseUrl}${url}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data), // Convertir los datos a JSON
+            });
+    
+            const dataResponse = await response.json();
+    
+            return {
+                statusCode: response.status,
+                data: dataResponse,
+            };
+        } catch (error) {
+            console.error("Error en el método PUT:", error);
+            throw error;
+        }
+    }
 
      // Método para GET (obtener datos)
      static async get<T>(url: string): Promise<any> {
