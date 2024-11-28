@@ -349,7 +349,7 @@ function CertificateDocument({
         {/* código de certificado */}
         <Text style={styles.eventPrefix}>
                 {/* {participantEvent?.certificate_code || 'sin codigo'} */}
-                D.I.: {certificate_code || 'sin codigo'}
+                D.I.: {participantEvent?.certificate_code || certificate_code}
                 
             </Text>
       </Page>

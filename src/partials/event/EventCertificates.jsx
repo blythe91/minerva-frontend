@@ -10,6 +10,7 @@ const EventCertificates = () => {
   const [filterText, setFilterText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [eventName, setEventName] = useState(''); // Estado para almacenar el nombre del evento
+  const [eventDetail, setEventDetail] = useState('');
   const navigate = useNavigate();
   const { id } = useParams(); // Captura el ID del evento desde la ruta
 
@@ -32,6 +33,7 @@ const EventCertificates = () => {
         const response2 = await Api.get(`/events/${id}`);
         if (response2.statusCode === 200 || response2.status === 200) {
           setEventName(response2.data.name_event); // Asignar el nombre del evento al estado
+          setEventDetail(response2.data);
           console.log("/////");
           console.log(id);
           console.log("/////");
@@ -68,15 +70,101 @@ const EventCertificates = () => {
     navigate(`/certgen/${participantid}`);
   };
 
+  function CorrelativeFormat(num, lenght) {
+    return num.toString().padStart(lenght, '0');
+  }
   // Manejador para generar todos los certificados
-  const handleGenerateAllCertificates = (eventId) => {
+  // const handleGenerateAllCertificates = (eventId) => {
+  //   if (eventId) {
+  //     navigate(`/certgen-all/${eventId}`); // Redirige a la ruta para generar y descargar todos los certificados
+  //   } else {
+  //     showAlert('Error', 'ID del evento no disponible', 'error');
+  //   }
+  // };
+
+  const redirectCertGenAll = (eventId) =>{
     if (eventId) {
       navigate(`/certgen-all/${eventId}`); // Redirige a la ruta para generar y descargar todos los certificados
     } else {
       showAlert('Error', 'ID del evento no disponible', 'error');
     }
-  };
+  }
 
+  const handleGenerateAllCertificates = async (eventId) => {
+    if (!eventId) {
+      showAlert('Error', 'ID del evento no disponible', 'error');
+      return;
+    }
+  
+    setIsLoading(true);
+  
+    try {
+      // Paso 1: Obtener el último correlativo
+      const correlativoResponse = await Api.get(`/id-cert-control/last-correlative/${eventDetail.event_type_id}/${new Date(eventDetail.start_date).getFullYear()}/${eventDetail.coordination_id}`);
+
+      const lastCorrelative = parseInt(correlativoResponse.data?.last_correlative || 0);
+  
+      let currentCorrelative = lastCorrelative + 1; // Iniciar el nuevo correlativo
+  
+      const updates = participantEvents
+      .filter(participant => !participant.certificate_code) // Filtra los participantes sin un certificate_code válido
+      .map(participant => ({
+        _id: participant._id,
+        certificate_code: `${eventDetail.event_prefix}-${CorrelativeFormat(currentCorrelative++, 4)}`,
+      }));
+  
+      if (updates.length === 0) {
+        showAlert('Información', 'Todos los participantes ya tienen códigos de certificado asignados.', 'info');
+        setIsLoading(false);
+        redirectCertGenAll(eventId);
+        return;
+      }
+  
+      // Paso 3: Actualizar el correlativo en id-cert-control
+
+      const updateCorrelative = {
+        'eventTypeId': eventDetail.event_type_id,
+        'year': new Date(eventDetail.start_date).getFullYear(),
+        'coordinationId': eventDetail.coordination_id,
+        'correlative': currentCorrelative-1,
+      };
+      // await Api.put('/id-cert-control/update-correlative', updateCorrelative);
+
+      
+      const updateResponse2 = await Api.post(`/id-cert-control/update-correlative/`,updateCorrelative);
+
+      if (updateResponse2.statusCode === 200) {
+        
+        console.log('Correlativo actualizado correctamente. '+updateCorrelative);
+        
+      } else {
+        alert('Error al actualizar el correlativo.');
+      }
+  
+      // Paso 4: Enviar las actualizaciones a la API
+      console.log(updates);
+      const updateResponse = await Api.postArray('/participant-events/multiple-certificates', updates);
+  
+      if (updateResponse.status === 200 || updateResponse.statusCode === 200) {
+        showAlert('Éxito', 'Códigos de certificado generados exitosamente.', 'success');
+      } else {
+        showAlert('Error', 'No se pudieron generar los códigos de certificado.', 'error');
+      }
+  
+      // Paso 5: Refrescar los datos del componente
+      const refreshedParticipants = await Api.get(`/participant-events/get-participants/${id}`);
+      if (refreshedParticipants.status === 200 || refreshedParticipants.statusCode === 200) {
+        setParticipantEvents(refreshedParticipants.data);
+        redirectCertGenAll(eventId);
+      }
+    } catch (error) {
+      console.error('Error al generar los códigos de certificado:', error);
+      showAlert('Error', 'Ocurrió un error al generar los códigos de certificado.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
 
   // Columnas de la tabla
   const columns = [

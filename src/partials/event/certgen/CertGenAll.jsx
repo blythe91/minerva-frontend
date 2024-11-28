@@ -19,7 +19,7 @@ const CertGenAll = () => {
   // Fetch de los participantes y detalles del evento (sin asincronía)
   const fetchData = () => {
     Api.get(`/participant-events/get-participants/${id}`).then(participantResponse => {
-      console.log("/////////");
+      console.log("/////////ParticipantEvent:");
       console.log(participantResponse.data);
       console.log("/////////");
       if (participantResponse.statusCode === 200) {
