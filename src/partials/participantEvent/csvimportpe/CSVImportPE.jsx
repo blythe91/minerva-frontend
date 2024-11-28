@@ -350,7 +350,7 @@ const CSVImportPE = () => {
                     event_type_name: eventData.event_type_name || '',
                     coordination_name: eventData.coordination_name || '',
                     event_prefix: eventData.event_prefix || '',
-                    certificate_code: '', // Código de certificado único
+                    certificate_code: participant.certificate_code || '', // Código de certificado único
                     participant_type_id: participant.participant_type_id,
                     name_participant_type: participantTypeName,
                 };
