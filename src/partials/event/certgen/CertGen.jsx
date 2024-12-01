@@ -180,7 +180,7 @@ const CertGen = () => {
       <PDFDownloadLink
         document={<CertificateDocument backgroundImage={"/certificate_templates/"+eventDetails.certificate_template_name} signature1={"/signatures/"+eventDetails.image_signature1} signature2={"/signatures/"+eventDetails.image_signature2} signature3={"/signatures/"+eventDetails.image_signature3} participantEvent={participantEvent} eventDetails={eventDetails} certificate_code={certificateCode}/>}
         
-        fileName={`Certificado_${eventDetails.event_prefix}_${participantEvent.cedula}_${participantEvent.pri_nom}_${participantEvent.pri_ape}.pdf`}
+        fileName={`Certificado_${participantEvent.certificate_code}_${participantEvent.pri_nom}_${participantEvent.pri_ape}.pdf`}
       >
         {({ loading }) => (
           <button 

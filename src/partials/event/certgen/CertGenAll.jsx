@@ -74,7 +74,7 @@ const CertGenAll = () => {
               )
                   .toBlob()
                   .then(pdfBlob => {
-                      const fileName = `Certificado_${eventDetails.event_prefix}_${participantEvent[i].cedula}_${participantEvent[i].pri_nom}_${participantEvent[i].pri_ape}.pdf`;
+                      const fileName = `Certificado_${participantEvent[i].certificate_code}_${participantEvent[i].pri_nom}_${participantEvent[i].pri_ape}.pdf`;
                       saveAs(pdfBlob, fileName);
                   });
           } catch (error) {

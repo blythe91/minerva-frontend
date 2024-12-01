@@ -29,7 +29,7 @@ const CSVImportPE = () => {
     const participantFields = [
         'pri_nom', 'seg_nom', 'pri_ape', 'seg_ape', 'cedula', 'celular', 'email',
         'nacionalidad', 'pais', 'estado', 'ciudad', 'direccion', 'codigo_postal',
-        'organismo', 'cargo', "event_id", "participant_type_id"
+        'organismo', 'cargo', "event_id", "participant_type_id", "certificate_code"
     ];
 
     useEffect(() => {
