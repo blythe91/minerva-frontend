@@ -262,7 +262,10 @@ function CertificateDocument({
           </Text>
 
           <Text style={styles.preambleEventName}>
-          En calidad de <Text style={styles.preambleParticipantType}> {participantEvent?.name_participant_type || ''} </Text> {eventDetails?.event_open_text} {eventDetails?.event_type_name}:
+          En calidad de <Text style={styles.preambleParticipantType}> {participantEvent?.name_participant_type || ''} </Text> {eventDetails?.event_open_text}:
+          
+          {eventDetails?.event_type_name}
+          
           </Text>
 
           <Text style={styles.eventName}>

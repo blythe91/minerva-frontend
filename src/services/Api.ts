@@ -51,7 +51,7 @@ export class Api {
         try {
             const response = await fetch(`${Api.baseUrl}${url}`, {
                 method: "PUT",
-                headers: {
+                headers: { 
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data), // Convertir los datos a JSON
