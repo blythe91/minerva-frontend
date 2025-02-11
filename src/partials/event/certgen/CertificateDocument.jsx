@@ -262,18 +262,18 @@ function CertificateDocument({
           </Text>
 
           <Text style={styles.preambleEventName}>
-          En calidad de <Text style={styles.preambleParticipantType}> {participantEvent?.name_participant_type || ''} </Text> {eventDetails?.event_open_text}:
+          En calidad de <Text style={styles.preambleParticipantType}> {participantEvent?.name_participant_type || ''} </Text> {eventDetails?.event_open_text+":"}
           
-          {eventDetails?.event_type_name}
+          {/* {eventDetails?.event_type_name} */}
           
-          </Text>
+          </Text>:
 
           <Text style={styles.eventName}>
             {eventDetails?.name_event || ''}
           </Text>
 
           {
-         (participantEvent.name_participant_type.toLowerCase().localeCompare(eventDetails.teacher_title.toLowerCase())) && 
+         (participantEvent.name_participant_type?.toLowerCase() || '').localeCompare((eventDetails.teacher_title?.toLowerCase() || '')) && 
           !eventDetails?.programatic_content && eventDetails?.teacher &&  (
             <Text style={styles.teacherFirstPage}>
               {eventDetails?.teacher_title || ''}: <Text style={styles.teacherFirstPageName}>{eventDetails?.teacher || ''}</Text>
