@@ -35,6 +35,7 @@ const ParticipantEventTable = () => {
   // Filtrar los datos de la tabla
   const filteredItems = participantEvents.filter(item => {
     const valuesToFilter = [
+      item.cedula,
       item.pri_nom,
       item.pri_ape,
       item.name_participant_type,
@@ -93,6 +94,13 @@ const ParticipantEventTable = () => {
       ),
     },
     {
+      name: 'Cédula',
+      selector: row => row.cedula,
+      sortable: true,
+
+    },
+    
+    {
       name: 'Nombre del Participante',
       selector: row => `${row.pri_nom} ${row.pri_ape}`,
       sortable: true,
@@ -135,18 +143,6 @@ const ParticipantEventTable = () => {
       name: 'Prefijo del Evento',
       selector: row => row.event_prefix,
       sortable: true,
-    },
-    {
-      name: 'Fecha de Inicio',
-      selector: row => row.start_date,
-      sortable: true,
-      cell: row => new Date(row.start_date).toLocaleDateString(), // Formato de fecha
-    },
-    {
-      name: 'Fecha de Fin',
-      selector: row => row.end_date,
-      sortable: true,
-      cell: row => new Date(row.end_date).toLocaleDateString(), // Formato de fecha
     },
   ];
 

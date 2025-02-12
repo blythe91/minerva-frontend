@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Api } from "../../services/Api";
 import { useParams, useNavigate } from "react-router-dom";
 import { showAlertTopEnd, showAlert } from "../../components/utils/Alert";
+import SearchableDropdown from "../utils/SearchableDropdown";
+import Select from 'react-select';
 
 const ParticipantEventForm = () => {
   const { id } = useParams(); // para obtener el ID si se está editando
@@ -25,6 +27,7 @@ const ParticipantEventForm = () => {
   const [participants, setParticipants] = useState([]);
   const [events, setEvents] = useState([]);
   const [participantTypes, setParticipantTypes] = useState([]);
+  const [options, setOptions] = useState([]);
 
   const [errors, setErrors] = useState({});
 
@@ -42,6 +45,12 @@ const ParticipantEventForm = () => {
         setEvents(eventResponse.data);
         setParticipantTypes(participantTypeResponse.data);
         
+        const options = participants.map(p => ({
+          id: p.cedula,
+          name: p.cedula,
+        }));
+
+        setOptions(options);
         // Load existing data for editing
         if (id) {
           const { data } = await Api.get(`/participant-events/${id}`);
@@ -61,7 +70,9 @@ const ParticipantEventForm = () => {
   };
 
   const handleParticipantChange = (e) => {
-    const selectedCedula = e.target.value; // Captura del valor seleccionado
+    // const selectedCedula = e.target.value; // Captura del valor seleccionado del select nativo
+    const selectedCedula = e.target?.value === undefined ? e.value : e.target.value;
+
     console.log("Cédula seleccionada:", selectedCedula);
     
     const selectedParticipant = participants.find((p) => String(p.cedula) === String(selectedCedula));
@@ -159,7 +170,7 @@ const ParticipantEventForm = () => {
         setIsLoading(false);
     };
  
- 
+    
     const handleBack = () => {
       navigate(-1); // Navega a la página anterior
     };
@@ -178,10 +189,13 @@ const ParticipantEventForm = () => {
     <h2 className="text-3xl font-bold mb-4">Formulario de Participante en Evento</h2>
 
     {/* Sección Datos de Participante */}
+
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div>
-        <label className="block text-sm font-medium">Cédula</label>
-        <select
+    <div>
+        <label className="block text-sm font-medium">Identificación</label>
+         
+         {/* Código funcional del select nativo, solo lo comentamos por si hay que debuggear */}
+         {/* <select
           name="cedula"
           value={participantEvent.cedula}
           onChange={handleParticipantChange}
@@ -193,7 +207,21 @@ const ParticipantEventForm = () => {
               {p.cedula}
             </option>
           ))}
-        </select>
+        </select>  */}
+
+        
+        
+
+        <Select
+          name="cedula"
+          value={participants.find(p => p.cedula === participantEvent.cedula)} 
+          onChange={(selectedOption) => handleParticipantChange(selectedOption)}
+          options={participants.map(p => ({ value: p.cedula, label: p.cedula, key: p._id }))}
+          className="form-select"
+        />
+
+        <strong className="d-block mt-2">Identificación Seleccionada: {participantEvent.cedula || "No seleccionado"}</strong>
+
         {errors.cedula && <p className="text-red-500 text-sm">{errors.cedula}</p>}
       </div>
 
@@ -220,17 +248,6 @@ const ParticipantEventForm = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Primer Apellido</label>
-        <input
-          type="text"
-          name="pri_ape"
-          value={participantEvent.pri_ape}
-          readOnly
-          className="form-input"
-        />
-      </div>
-
-      <div>
         <label className="block text-sm font-medium">Segundo Nombre</label>
         <input
           type="text"
@@ -240,7 +257,16 @@ const ParticipantEventForm = () => {
           className="form-input"
         />
       </div>
-
+      <div>
+        <label className="block text-sm font-medium">Primer Apellido</label>
+        <input
+          type="text"
+          name="pri_ape"
+          value={participantEvent.pri_ape}
+          readOnly
+          className="form-input"
+        />
+      </div>
       <div>
         <label className="block text-sm font-medium">Segundo Apellido</label>
         <input
